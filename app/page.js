@@ -17,6 +17,7 @@ export default function Home() {
       <main>
           {/* Navegación principal fija */}
           <Header />
+          <Header />
           
           {/* Sección hero con video de fondo */}
           <Hero />

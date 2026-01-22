@@ -5,7 +5,7 @@ export default function Bridge({ text }) {
             <div className="absolute inset-0 flex items-center justify-center">
                 <div className="h-0.5 w-full absolute flex justify-center items-center bg-white/10"></div>
                 <div className="px-12 bg-black z-10">   
-                    <p className="text-center text-1xl font-medium">
+                    <p className="text-center text-xl font-medium">
                         {text}
                     </p>
                 </div>

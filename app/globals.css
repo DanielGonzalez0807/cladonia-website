@@ -2,8 +2,9 @@
 
 :root {
   --color-primary: #fdc63f;
-  --color-hover: #FFE190;
+  --button-hover: #FFE190;
   --bg-header: #777777/20;
+  --bg-map:#EEEEEE;
 }
 
 @layer utilities {

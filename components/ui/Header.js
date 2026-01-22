@@ -16,14 +16,17 @@ export default function Header() {
             </Link>
             
             {/* Título principal centrado */}
-            <h2 className="absolute left-1/2 -translate-x-1/2 text-white font-medium tracking-wide text-4xl">
-            C L A D O N I A
-            </h2>
-            
+            <Image
+                src="/tipografia.svg"
+                alt="Nombre del proyecto"
+                width={200} height={40}
+                className="absolute left-1/2 -translate-x-1/2 object-cover invert"
+            />
+
             {/* Botón de acción principal */}
             <Link
                 href="/reservar"
-                className="bg-(--color-primary) text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-white/90 transition">
+                className="bg-(--color-primary) text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-(--button-hover) transition">
                 Reservar
             </Link>
 

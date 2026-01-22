@@ -13,17 +13,17 @@ export default function About() {
   // Datos de las diferentes experiencias disponibles
   const events = [
     {
-      image: "/images/img_1.png",
+      image: "/images/exp_1.png",
       title: "CHINGAZA",
       description: "Recorre senderos milenarios siguiendo las huellas de nuestros ancestros. Descubre petroglifos, plantas medicinales y la sabiduría de los pueblos originarios en una experiencia transformadora."
     },
     {
-      image: "/images/img_1.png",
+      image: "/images/img_.png",
       title: "CHINGAZA",
       description: "Encuentra la paz interior en medio de la naturaleza. Sesión de meditación guiada junto a cascadas naturales, respiración consciente y conexión profunda con el entorno."
     },
     {
-      image: "/images/img_1.png",
+      image: "/images/img_3.png",
       title: "CHINGAZA",
       description: "Explora la vida nocturna del bosque bajo un cielo estrellado. Avista fauna nocturna, escucha los sonidos de la noche y aprende sobre astronomía en un ambiente mágico."
     }
@@ -45,72 +45,54 @@ export default function About() {
   // Obtiene el índice de la imagen siguiente para mostrar en el carrusel
   const getNextIndex = () => (currentImage + 1) % events.length;
   return (
-    <section className="top-0 relative w-full bg-black py-2 text-white">
+    <section className="relative w-full min-h-screen bg-black flex flex-col justify-center text-white py-8">
       
       {/* Sección del título principal */}
-      <div className="text-center mb-12">
-        <div className="top-0 flex flex-col items-center space-y-8">
+      <div className="text-center mb-8">
+        <div className="flex flex-col items-center space-y-4">
             {/* Título fijo del parque */}
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold">
             Parque Natural Nacional
             </h2>
             {/* Título dinámico que cambia según la imagen activa */}
-            <h2 className="text-4xl md:text-6xl lg:text-8xl font-semibold">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-semibold">
             {events[currentImage].title}
             </h2>
         </div> 
       </div>
 
-      {/* Carrusel de imágenes interactivo */}
-      <div className="relative w-full flex items-center justify-center">
+      {/* Carrusel de imagen única apaisada */}
+      <div className="relative w-full max-w-6xl mx-auto aspect-video">
+        
+        {/* Imagen principal apaisada */}
+        <Image
+          src={events[currentImage].image}
+          alt="Evento"
+          fill
+          className="object-cover rounded-lg"
+        />
+        
+        {/* Overlay oscuro para mejorar legibilidad del texto */}
+        <div className="absolute inset-0 bg-black/40 rounded-lg"></div>
         
         {/* Botón para navegar a la imagen anterior */}
-        <button onClick={prevImage} className="absolute left-6 z-20 text-white/30 hover:text-white/60 text-6xl">
+        <button onClick={prevImage} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 text-white/70 hover:text-white text-4xl md:text-5xl">
           ‹
         </button>
 
-        {/* Imagen previa (lado izquierdo) */}
-        <div className="relative w-1/4 h-32 md:h-48 lg:h-64 rounded-lg overflow-hidden opacity-60">
-          <Image
-            src={events[getPrevIndex()].image}
-            alt="Imagen anterior"
-            fill
-            className="object-cover"
-          />
-        </div>
-
-        {/* Imagen principal (centro) */}
-        <div className="relative w-full h-56 md:h-72 lg:h-136
-         rounded-xl overflow-hidden shadow-xl z-10">
-          <Image
-            src={events[currentImage].image}
-            alt="Evento"
-            fill
-            className="object-cover"
-          />
-        </div>
-
-        {/* Imagen siguiente (lado derecho) */}
-        <div className="relative w-1/4 h-32 md:h-48 lg:h-64 rounded-lg overflow-hidden opacity-60">
-          <Image
-            src={events[getNextIndex()].image}
-            alt="Imagen siguiente"
-            fill
-            className="object-cover"
-          />
-        </div>
-
         {/* Botón para navegar a la imagen siguiente */}
-        <button onClick={nextImage} className="absolute right-6 z-20 text-white/30 hover:text-white/60 text-6xl">
+        <button onClick={nextImage} className="absolute right-4 top-1/2 -translate-y-1/2 z-20 text-white/70 hover:text-white text-4xl md:text-5xl">
           ›
         </button>
+        
+        {/* Descripción en la parte inferior de la imagen */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 p-6">
+          <p className="max-w-5xl mx-auto text-center text-sm md:text-base lg:text-lg text-white text-balance">
+            {events[currentImage].description}
+          </p>
+        </div>
 
       </div>
-
-      {/* Descripción dinámica de la experiencia actual */}
-      <p className="absolute z-10 mt-10 max-w-2xl mx-auto text-center text-xs md:text-sm lg:text-base text-white/70 px-4">
-        {events[currentImage].description}
-      </p>
 
     </section>
   );

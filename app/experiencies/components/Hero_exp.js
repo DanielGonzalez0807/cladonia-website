@@ -1,8 +1,36 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Hero_exp() {
   return (
     <section className="relative h-screen w-screen overflow-hidden">
+
+      {/* Aquí va el HEADER */}
+      <header className="relative top-0 left-0 w-full z-50">
+            <nav className="relative mx-auto max-w-au px-6 py-4 flex items-center justify-between bg-(--bg-header) backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)]">
+            
+            {/* Logo clickeable que redirige al inicio */}
+            <Link href="/" className="invert">
+                    <Image src="/logo.svg" alt="Cladonia Logo" width={40} height={40} priority/>
+            </Link>
+            
+            {/* Título principal centrado */}
+            <Image
+                src="/tipografia.svg"
+                alt="Nombre del proyecto"
+                width={200} height={40}
+                className="absolute left-1/2 -translate-x-1/2 object-cover invert"
+            />
+
+            {/* Botón de acción principal */}
+            <Link
+                href="/reservar"
+                className="bg-(--color-primary) text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-(--button-hover) transition">
+                Reservar
+            </Link>
+
+            </nav>   
+        </header>
       
       {/* IMAGEN */}
       <Image
