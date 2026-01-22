@@ -13,8 +13,8 @@ export default function ExperiencesPage() {
             <About />
             <Bridge_reserv text="Reserva tu experiencia favorita" />
             <Activities />
-            <Bridge text="Explora tu próxima aventura" />
+            <Bridge text="Explora tu próxima aventura!" />
             <Map />
         </main>
-    );
+    ); 
 }

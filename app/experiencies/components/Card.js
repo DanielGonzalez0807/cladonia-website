@@ -15,13 +15,13 @@ export default function Card({ title, description, image }) {
                 className="w-full h-174.75 object-cover"
             />
             {/* Contenido superpuesto sobre la imagen */}
-            <div className="absolute inset-0 p-6 flex flex-col items-center justify-end">
+            <div className="absolute inset-0 p-6 flex flex-col items-center justify-end bg-black/12">
                 <div className="text-center text-white">
                     {/* Título de la experiencia */}
                     <h3 className="text-2xl font-bold mb-2">{title}</h3>
                     
                     {/* Descripción */}
-                    <p className="mb-4 text-m">{description}</p>
+                    <p className="mb-4 text-m text-balance">{description}</p>
                 </div>
             </div>
         </div>

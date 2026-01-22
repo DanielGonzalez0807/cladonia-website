@@ -7,7 +7,7 @@ import Image from "next/image";
  */
 export default function Card({ title, description, image }) {
     return (
-        <div className="relative rounded-lg overflow-hidden w-98.25 h-174.75">
+        <div className="relative rounded-lg overflow-hidden w-98.25 h-174.75 hover:animate-float">
             {/* Imagen de fondo de la tarjeta */}
             <Image 
                 src={image} 
@@ -34,7 +34,7 @@ export default function Card({ title, description, image }) {
                 {/* Botón de reserva */}
                 <Link
                     href="/reservar"
-                    className="bg-(--color-primary) text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-amber-200 transition">
+                    className="bg-(--color-primary) text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-amber-200 transition hover:animate-bouncing">
                     Reservar
                 </Link>
             </div>
