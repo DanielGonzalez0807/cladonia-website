@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Map() {
     return (
-        <section className="relative w-full min-h-screen bg-[#EEE] flex flex-col text-black justify-between items-center">
+        <section className="relative w-full min-h-screen bg-[#F7F7F7] flex flex-col text-black justify-between items-center">
             <div className="mt-36 ">
                 <h2 className="text-4xl font-semibold text-center mb-2 px-4">
                 Mapa del Recorrido

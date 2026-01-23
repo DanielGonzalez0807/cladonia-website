@@ -1,0 +1,60 @@
+import Image from "next/image";
+
+export default function Recommendations() {
+    return (
+    <section className="relative w-full h-screen bg-[#EEE] p-8 xl:p-24">
+        <h2 className="text-4xl font-semibold text-center mt-12 text-black">
+        Recomendaciones
+        </h2>
+        <div className="relative w-full xl:w-7xl xl:mx-auto h-[calc(100%-6rem)] p-6 flex items-center">
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-2 w-full xl:h-auto">
+                <div className="bg-white p-4 xl:py-8 xl:px-6 rounded-lg text-center flex flex-col justify-center items-center">
+                    <Image
+                        src="/icons/recycle.svg"
+                        alt="Ropa cómoda"
+                        width={48}
+                        height={48}
+                        className="mb-2"
+                    />
+                    <h3 className="text-lg font-bold mb-2 text-black">No lleves plásticos ni desechables</h3>
+                    <p className="text-gray-600 text-sm text-balance">Ayuda a conservar el ecosistema libre de contaminación.</p>
+                </div>
+                <div className="bg-white p-4 xl:py-8 xl:px-6 rounded-lg text-center flex flex-col justify-center items-center">
+                    <Image
+                        src="/icons/shoes.svg"
+                        alt="Hidratación"
+                        width={48}
+                        height={48}
+                        className="mb-2"
+                    />
+                    <h3 className="text-lg font-bold mb-2 text-black">Usa calzado cómodo y resistente</h3>
+                    <p className="text-gray-600 text-sm text-balance">Los senderos pueden ser irregulares y húmedos</p>
+                </div>
+                <div className="bg-white p-4 xl:py-8 xl:px-6 rounded-lg text-center flex flex-col justify-center items-center">
+                    <Image
+                        src="/icons/drop.svg"
+                        alt="Protección solar"
+                        width={48}
+                        height={48}
+                        className="mb-2"
+                    />
+                    <h3 className="text-lg font-bold mb-2 text-black">Hidrátate con tarro reutilizable</h3>
+                    <p className="text-gray-600 text-sm text-balance">Preferiblemente evita botellas plásticas.</p>
+                </div>
+                <div className="bg-white p-4 xl:py-8 xl:px-6 rounded-lg text-center flex flex-col justify-center items-center">
+                    <Image
+                        src="/icons/plant.svg"
+                        alt="Respeto natural"
+                        width={48}
+                        height={48}
+                        className="mb-2"
+                    />
+                    <h3 className="text-lg font-bold mb-2 text-black">Respeta la naturaleza</h3>
+                    <p className="text-gray-600 text-sm text-balance">No extraer plantas ni molestar animales.</p>
+                </div>
+            </div>
+        </div>        
+
+    </section>
+    );
+}
