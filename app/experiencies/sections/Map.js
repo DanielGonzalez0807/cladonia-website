@@ -71,6 +71,13 @@ export default function Map() {
                     fill
                     className="object-contain"
                 />
+                <div className="absolute top-8 md:top-4 left-6 md:left-8 lg:left-24 xl:left-40 xl:top-16 2xl:left-44 text-center">
+                    <h2 className="text-2xl md:text-2xl lg:text-3xl font-bold text-black px-4 mb-2">Distancia aprox.</h2>
+                    <div className="flex flex-row items-baseline justify-center">
+                        <h2 className="text-6xl md:text-4xl lg:text-8xl font-bold text-black">8</h2>
+                        <p className="text-2xl md:text-xl lg:text-2xl font-semibold text-black px-1">km</p>
+                    </div>
+                </div>
             </div>
         </section>
     );

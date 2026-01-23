@@ -18,7 +18,7 @@ export default function About() {
       description: "Recorre senderos milenarios siguiendo las huellas de nuestros ancestros. Descubre petroglifos, plantas medicinales y la sabiduría de los pueblos originarios en una experiencia transformadora."
     },
     {
-      image: "/images/img_.png",
+      image: "/images/img_1.png",
       title: "CHINGAZA",
       description: "Encuentra la paz interior en medio de la naturaleza. Sesión de meditación guiada junto a cascadas naturales, respiración consciente y conexión profunda con el entorno."
     },
