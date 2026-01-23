@@ -9,18 +9,21 @@ export default function Events() {
       image: "/images/img_1.png",
       title: "Caminata Ancestral",
       date: "Próximo 16 de marzo",
+      cupos: "12 cupos disponibles",
       description: "Recorre senderos milenarios siguiendo las huellas de nuestros ancestros. Descubre petroglifos, plantas medicinales y la sabiduría de los pueblos originarios en una experiencia transformadora."
     },
     {
       image: "/images/img_2.png",
       title: "Tarde de Meditación",
       date: "Próximo 23 de marzo",
+      cupos: "8 cupos disponibles",
       description: "Encuentra la paz interior en medio de la naturaleza. Sesión de meditación guiada junto a cascadas naturales, respiración consciente y conexión profunda con el entorno."
     },
     {
       image: "/images/img_3.png",
       title: "Observación Nocturna",
       date: "Próximo 30 de marzo",
+      cupos: "15 cupos disponibles",
       description: "Explora la vida nocturna del bosque bajo un cielo estrellado. Avista fauna nocturna, escucha los sonidos de la noche y aprende sobre astronomía en un ambiente mágico."
     }
   ];
@@ -40,66 +43,88 @@ export default function Events() {
       
       {/* TITULO */}
       <div className="text-center mb-12">
-        <div className="top-0 flex flex-col items-center space-y-8"  >   
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold">
-            Eventos Programados
-            </h2>
-            <h2 className="text-lg md:text-xl lg:text-2xl font-semibold">
-            {events[currentImage].title}
-            </h2>
-        </div>    
-        <p className="mt-2 text-sm md:text-base lg:text-lg text-white">
-          {events[currentImage].date}
-        </p>
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold">
+        Eventos Programados
+        </h2>
       </div>
 
-      {/* SLIDER */}
-      <div className="relative w-full flex items-center justify-center">
+      {/* SLIDER DESKTOP - CARRUSEL MÓVIL */}
+      <div className="relative w-full">
         
-        {/* Flecha izquierda */}
-        <button onClick={prevImage} className="absolute left-6 z-20 text-white/30 hover:text-white/60 text-6xl">
-          ‹
-        </button>
-
-        {/* IMAGEN ANTERIOR */}
-        <div className="relative w-1/4 h-32 md:h-48 lg:h-64 rounded-lg overflow-hidden opacity-60">
-          <Image
-            src={events[getPrevIndex()].image}
-            alt="Imagen anterior"
-            fill
-            className="object-cover"
-          />
+        {/* Carrusel móvil */}
+        <div className="lg:hidden flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden px-6" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+          {events.map((event, index) => (
+            <div key={index} className="relative min-w-full aspect-video rounded-lg overflow-hidden snap-start">
+              <Image
+                src={event.image}
+                alt={event.title}
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-black/40"></div>
+              <div className="absolute top-4 left-4 right-4 text-white text-center">
+                <h3 className="text-lg font-bold mb-1">{event.title}</h3>
+                <p className="text-sm opacity-90">{event.date}</p>
+              </div>
+              <div className="absolute bottom-4 left-4 right-4 text-white">
+                <p className="text-lg font-bold">{event.cupos}</p>
+              </div>
+              <button className="absolute bottom-4 right-4 bg-amber-400 text-black px-4 py-2 rounded-full font-bold text-sm">
+                Obtén un cupo
+              </button>
+            </div>
+          ))}
         </div>
-
-        {/* IMAGEN PRINCIPAL */}
-        <div className="relative w-1/2 h-48 md:h-72 lg:h-96 rounded-xl overflow-hidden shadow-xl z-10">
-          <Image
-            src={events[currentImage].image}
-            alt="Evento"
-            fill
-            className="object-cover"
-          />
-
-          {/* BOTÓN */}
-          <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-(--color-primary) text-black px-4 py-2 rounded-full font-bold shadow-lg hover:bg-amber-200 transition">
-            Obtén un cupo
+        
+        {/* Slider desktop */}
+        <div className="hidden lg:flex items-center justify-center">
+          
+          {/* Flecha izquierda */}
+          <button onClick={prevImage} className="absolute left-6 z-20 text-white/30 hover:text-white/60 text-6xl">
+            ‹
           </button>
-        </div>
 
-        {/* IMAGEN SIGUIENTE */}
-        <div className="relative w-1/4 h-32 md:h-48 lg:h-64 rounded-lg overflow-hidden opacity-60">
-          <Image
-            src={events[getNextIndex()].image}
-            alt="Imagen siguiente"
-            fill
-            className="object-cover"
-          />
-        </div>
+          {/* IMAGEN ANTERIOR */}
+          <div className="relative w-1/4 aspect-video rounded-lg overflow-hidden opacity-60">
+            <Image
+              src={events[getPrevIndex()].image}
+              alt="Imagen anterior"
+              fill
+              className="object-cover"
+            />
+          </div>
 
-        {/* Flecha derecha */}
-        <button onClick={nextImage} className="absolute right-6 z-20 text-white/30 hover:text-white/60 text-6xl">
-          ›
-        </button>
+          {/* IMAGEN PRINCIPAL */}
+          <div className="relative w-1/2 aspect-video rounded-xl overflow-hidden shadow-xl z-10">
+            <Image
+              src={events[currentImage].image}
+              alt="Evento"
+              fill
+              className="object-cover"
+            />
+
+            {/* BOTÓN */}
+            <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-amber-400 text-black px-4 py-2 rounded-full font-bold shadow-lg hover:bg-amber-200 transition">
+              Obtén un cupo
+            </button>
+          </div>
+
+          {/* IMAGEN SIGUIENTE */}
+          <div className="relative w-1/4 aspect-video rounded-lg overflow-hidden opacity-60">
+            <Image
+              src={events[getNextIndex()].image}
+              alt="Imagen siguiente"
+              fill
+              className="object-cover"
+            />
+          </div>
+
+          {/* Flecha derecha */}
+          <button onClick={nextImage} className="absolute right-6 z-20 text-white/30 hover:text-white/60 text-6xl">
+            ›
+          </button>
+
+        </div>
 
       </div>
 

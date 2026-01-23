@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 
 export default function About() {
@@ -19,36 +20,50 @@ export default function About() {
                     </p>
                 </div>
                 
-                {/* BENTO GRID DERECHA */}
-                <div className="w-full grid grid-cols-5 grid-rows-4 gap-2 h-64 lg:h-96">
-                    <div className="relative rounded-lg bg-black overflow-hidden row-span-2"></div>
-                     <div className="relative rounded-lg overflow-hidden row-span-2">
-                        <Image src="/images/img_1.png" alt="Naturaleza 1" fill className="object-cover"/>
-                    </div>
-                    <div className="relative rounded-lg overflow-hidden col-span-2">
-                        <Image src="/images/img_2.png" alt="Naturaleza 2" fill className="object-cover"/>
-                    </div>
-                    <div className="relative rounded-lg bg-black overflow-hidden row-span-1"></div>
-                    <div className="relative rounded-lg overflow-hidden row-span-2">
-                        <Image src="/images/img_3.png" alt="Naturaleza 3" fill className="object-cover"/>
-                    </div>
-                    <div className="relative rounded-lg overflow-hidden col-span-2">
-                        <Image src="/images/img_3.png" alt="Naturaleza 3" fill className="object-cover"/>
+                {/* BENTO GRID DERECHA - CARRUSEL EN MÓVIL */}
+                <div className="w-full">
+                    {/* Carrusel móvil */}
+                    <div className="lg:hidden flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+                        <div className="relative min-w-full h-64 rounded-lg overflow-hidden snap-start">
+                            <Image src="/images/img_1.png" alt="Paisaje natural del Parque Chingaza" fill className="object-cover"/>
+                        </div>
+                        <div className="relative min-w-full h-64 rounded-lg overflow-hidden snap-start">
+                            <Image src="/images/img_2.png" alt="Senderos ecológicos en reserva natural" fill className="object-cover"/>
+                        </div>
+                        <div className="relative min-w-full h-64 rounded-lg overflow-hidden snap-start">
+                            <Image src="/images/img_3.png" alt="Flora y fauna en tour fotográfico" fill className="object-cover"/>
+                        </div>
                     </div>
                     
-                    <div className="relative rounded-lg overflow-hidden col-span-2">
-                        <Image src="/images/img_3.png" alt="Naturaleza 3" fill className="object-cover"/>
+                    {/* Bento Grid desktop */}
+                    <div className="hidden lg:grid grid-cols-5 grid-rows-4 gap-2 h-96">
+                        <div className="relative rounded-lg bg-black overflow-hidden row-span-2"></div>
+                         <div className="relative rounded-lg overflow-hidden row-span-2">
+                            <Image src="/images/img_1.png" alt="Paisaje natural del Parque Chingaza" fill className="object-cover"/>
+                        </div>
+                        <div className="relative rounded-lg overflow-hidden col-span-2">
+                            <Image src="/images/img_2.png" alt="Senderos ecológicos en reserva natural" fill className="object-cover"/>
+                        </div>
+                        <div className="relative rounded-lg bg-black overflow-hidden row-span-1"></div>
+                        <div className="relative rounded-lg overflow-hidden row-span-2">
+                            <Image src="/images/img_3.png" alt="Flora y fauna en tour fotográfico" fill className="object-cover"/>
+                        </div>
+                        <div className="relative rounded-lg overflow-hidden col-span-2">
+                            <Image src="/images/img_3.png" alt="Flora y fauna en tour fotográfico" fill className="object-cover"/>
+                        </div>
+                        
+                        <div className="relative rounded-lg overflow-hidden col-span-2">
+                            <Image src="/images/img_3.png" alt="Flora y fauna en tour fotográfico" fill className="object-cover"/>
+                        </div>
+                        <div className="relative rounded-lg overflow-hidden row-span-2">
+                            <Image src="/images/img_3.png" alt="Flora y fauna en tour fotográfico" fill className="object-cover"/>
+                        </div>
+                        <div className="relative rounded-lg bg-black overflow-hidden row-span-2"></div>
+                        <div className="relative rounded-lg bg-black overflow-hidden row-span-2"></div>
+                        <div className="relative rounded-lg overflow-hidden col-span-2">
+                            <Image src="/images/img_2.png" alt="Senderos ecológicos en reserva natural" fill className="object-cover"/>
+                        </div>
                     </div>
-                    <div className="relative rounded-lg overflow-hidden row-span-2">
-                        <Image src="/images/img_3.png" alt="Naturaleza 3" fill className="object-cover"/>
-                    </div>
-                    <div className="relative rounded-lg bg-black overflow-hidden row-span-2"></div>
-                    <div className="relative rounded-lg bg-black overflow-hidden row-span-2"></div>
-                    <div className="relative rounded-lg overflow-hidden col-span-2">
-                        <Image src="/images/img_2.png" alt="Naturaleza 2" fill className="object-cover"/>
-                    </div>
-                    
-                    
                 </div>
             </div>
         </section>                          

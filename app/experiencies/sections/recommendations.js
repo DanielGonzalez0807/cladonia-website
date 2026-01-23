@@ -11,7 +11,7 @@ export default function Recommendations() {
                 <div className="bg-white p-4 xl:py-8 xl:px-6 rounded-lg text-center flex flex-col justify-center items-center">
                     <Image
                         src="/icons/recycle.svg"
-                        alt="Ropa cómoda"
+                        alt="Icono de reciclaje para no usar plásticos"
                         width={48}
                         height={48}
                         className="mb-2"
@@ -22,7 +22,7 @@ export default function Recommendations() {
                 <div className="bg-white p-4 xl:py-8 xl:px-6 rounded-lg text-center flex flex-col justify-center items-center">
                     <Image
                         src="/icons/shoes.svg"
-                        alt="Hidratación"
+                        alt="Icono de zapatos deportivos para senderismo"
                         width={48}
                         height={48}
                         className="mb-2"
@@ -33,7 +33,7 @@ export default function Recommendations() {
                 <div className="bg-white p-4 xl:py-8 xl:px-6 rounded-lg text-center flex flex-col justify-center items-center">
                     <Image
                         src="/icons/drop.svg"
-                        alt="Protección solar"
+                        alt="Icono de gota de agua para hidratación"
                         width={48}
                         height={48}
                         className="mb-2"
@@ -44,7 +44,7 @@ export default function Recommendations() {
                 <div className="bg-white p-4 xl:py-8 xl:px-6 rounded-lg text-center flex flex-col justify-center items-center">
                     <Image
                         src="/icons/plant.svg"
-                        alt="Respeto natural"
+                        alt="Icono de planta para respeto a la naturaleza"
                         width={48}
                         height={48}
                         className="mb-2"
