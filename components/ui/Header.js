@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import ReserveBtn from "./Reserve_btn";
 
 /**
  * Componente Header fijo para navegación principal
@@ -24,11 +25,7 @@ export default function Header() {
             />
 
             {/* Botón de acción principal */}
-            <Link
-                href="/reservar"
-                className="bg-(--color-primary) text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-(--button-hover) transition">
-                Reservar
-            </Link>
+            <ReserveBtn />
 
             </nav>   
         </header>    

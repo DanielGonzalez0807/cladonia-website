@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import ReserveBtn from "./Reserve_btn";
 
 /**
  * Componente Card reutilizable para mostrar experiencias
@@ -32,11 +33,7 @@ export default function Card({ title, description, image }) {
                 </div>
                 
                 {/* Botón de reserva */}
-                <Link
-                    href="/reservar"
-                    className="bg-(--color-primary) text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-amber-200 transition hover:animate-bouncing">
-                    Reservar
-                </Link>
+                <ReserveBtn />
             </div>
         </div>
     )

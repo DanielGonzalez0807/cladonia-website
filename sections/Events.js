@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import ReserveBtn from "../components/ui/Reserve_btn";
 
 export default function Events() {
   const [currentImage, setCurrentImage] = useState(0);
@@ -69,9 +70,9 @@ export default function Events() {
               <div className="absolute bottom-4 left-4 right-4 text-white">
                 <p className="text-lg font-bold">{event.cupos}</p>
               </div>
-              <button className="absolute bottom-4 right-4 bg-amber-400 text-black px-4 py-2 rounded-full font-bold text-sm">
-                Obtén un cupo
-              </button>
+              <div className="absolute bottom-4 right-4">
+                <ReserveBtn />
+              </div>
             </div>
           ))}
         </div>
@@ -104,9 +105,9 @@ export default function Events() {
             />
 
             {/* BOTÓN */}
-            <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-amber-400 text-black px-4 py-2 rounded-full font-bold shadow-lg hover:bg-amber-200 transition">
-              Obtén un cupo
-            </button>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
+              <ReserveBtn />
+            </div>
           </div>
 
           {/* IMAGEN SIGUIENTE */}
