@@ -1,5 +1,13 @@
-export default function FormPage() {
+import Header from "@/components/ui/Header";
+import FormPage from "./sections/form";
+
+export default function ReservePage() {
   return (
-    <div>Form Page</div>
+    <main>
+        <FormPage />  
+
+
+
+    </main>
   );
 }
