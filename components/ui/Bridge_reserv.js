@@ -11,8 +11,8 @@ export default function Bridge_reserv({ text }) {
                     </p>
                 </div>
                 <Link
-                href="/reservar"
-                className="bg-(--color-primary) text-black px-16 py-1 rounded-full text-sm font-bold hover:bg-white/90 transition">
+                href="/form"
+                className="bg-yellow-400 text-black px-16 py-1 rounded-full text-sm font-bold hover:bg-yellow-500 transition">
                 Reservar
                 </Link>
             </div>

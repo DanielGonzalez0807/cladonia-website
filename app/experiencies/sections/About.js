@@ -62,7 +62,7 @@ export default function About() {
       </div>
 
       {/* Carrusel de imagen única apaisada */}
-      <div className="relative w-full max-w-6xl mx-auto aspect-video">
+      <div className="relative w-full max-w-4xl mx-auto aspect-video px-4">
         
         {/* Imagen principal apaisada */}
         <Image

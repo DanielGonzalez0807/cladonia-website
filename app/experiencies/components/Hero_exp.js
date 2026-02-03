@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ReserveBtn from "@/components/ui/Reserve_btn";
 
 export default function Hero_exp() {
   return (
@@ -23,11 +24,7 @@ export default function Hero_exp() {
             />
 
             {/* Botón de acción principal */}
-            <Link
-                href="/reservar"
-                className="bg-(--color-primary) text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-(--button-hover) transition">
-                Reservar
-            </Link>
+            <ReserveBtn />
 
             </nav>   
         </header>

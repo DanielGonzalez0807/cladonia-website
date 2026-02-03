@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import ReserveBtn from "../components/ui/Reserve_btn";
 
 export default function Events() {
   const [currentImage, setCurrentImage] = useState(0);
@@ -39,20 +40,20 @@ export default function Events() {
   const getPrevIndex = () => (currentImage - 1 + events.length) % events.length;
   const getNextIndex = () => (currentImage + 1) % events.length;
   return (
-    <section className="top-0 relative w-full bg-black py-2 text-white">
+    <section className="top-0 relative w-full bg-black py-8 md:py-12 text-white">
       
       {/* TITULO */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-8 md:mb-12">
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold">
         Eventos Programados
         </h2>
       </div>
 
       {/* SLIDER DESKTOP - CARRUSEL MÓVIL */}
-      <div className="relative w-full">
+      <div className="relative w-full px-4 md:px-0">
         
         {/* Carrusel móvil */}
-        <div className="lg:hidden flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden px-6" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+        <div className="md:hidden flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
           {events.map((event, index) => (
             <div key={index} className="relative min-w-full aspect-video rounded-lg overflow-hidden snap-start">
               <Image
@@ -69,18 +70,18 @@ export default function Events() {
               <div className="absolute bottom-4 left-4 right-4 text-white">
                 <p className="text-lg font-bold">{event.cupos}</p>
               </div>
-              <button className="absolute bottom-4 right-4 bg-amber-400 text-black px-4 py-2 rounded-full font-bold text-sm">
-                Obtén un cupo
-              </button>
+              <div className="absolute bottom-4 right-4">
+                <ReserveBtn />
+              </div>
             </div>
           ))}
         </div>
         
-        {/* Slider desktop */}
-        <div className="hidden lg:flex items-center justify-center">
+        {/* Slider tablet y desktop */}
+        <div className="hidden md:flex items-center justify-center max-w-6xl mx-auto">
           
           {/* Flecha izquierda */}
-          <button onClick={prevImage} className="absolute left-6 z-20 text-white/30 hover:text-white/60 text-6xl">
+          <button onClick={prevImage} className="absolute left-2 md:left-6 z-20 text-white/30 hover:text-white/60 text-4xl md:text-6xl">
             ‹
           </button>
 
@@ -95,18 +96,30 @@ export default function Events() {
           </div>
 
           {/* IMAGEN PRINCIPAL */}
-          <div className="relative w-1/2 aspect-video rounded-xl overflow-hidden shadow-xl z-10">
+          <div className="relative w-1/2 aspect-video rounded-xl overflow-hidden shadow-xl z-10 mx-2 md:mx-4">
             <Image
               src={events[currentImage].image}
               alt="Evento"
               fill
               className="object-cover"
             />
+            <div className="absolute inset-0 bg-black/40"></div>
+            
+            {/* Información del evento */}
+            <div className="absolute top-4 left-4 right-4 text-white text-center">
+              <h3 className="text-lg md:text-xl font-bold mb-1">{events[currentImage].title}</h3>
+              <p className="text-sm md:text-base opacity-90">{events[currentImage].date}</p>
+            </div>
+            
+            {/* Cupos disponibles */}
+            <div className="absolute bottom-4 left-4 text-white">
+              <p className="text-lg font-bold">{events[currentImage].cupos}</p>
+            </div>
 
             {/* BOTÓN */}
-            <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-amber-400 text-black px-4 py-2 rounded-full font-bold shadow-lg hover:bg-amber-200 transition">
-              Obtén un cupo
-            </button>
+            <div className="absolute bottom-4 right-4">
+              <ReserveBtn />
+            </div>
           </div>
 
           {/* IMAGEN SIGUIENTE */}
@@ -120,7 +133,7 @@ export default function Events() {
           </div>
 
           {/* Flecha derecha */}
-          <button onClick={nextImage} className="absolute right-6 z-20 text-white/30 hover:text-white/60 text-6xl">
+          <button onClick={nextImage} className="absolute right-2 md:right-6 z-20 text-white/30 hover:text-white/60 text-4xl md:text-6xl">
             ›
           </button>
 
@@ -129,7 +142,7 @@ export default function Events() {
       </div>
 
       {/* DESCRIPCIÓN */}
-      <p className="mt-10 max-w-2xl mx-auto text-center text-xs md:text-sm lg:text-base text-white/70 px-4">
+      <p className="mt-6 md:mt-10 max-w-2xl mx-auto text-center text-xs md:text-sm lg:text-base text-white/70 px-4">
         {events[currentImage].description}
       </p>
 
