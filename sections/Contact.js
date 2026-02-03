@@ -14,7 +14,7 @@ export default function Contact() {
                             height={48}
                             className="mx-auto mb-4"
                         />
-                        <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-4">Teléfono</h3>
+                        <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-4">WhatsApp</h3>
                         <p className="text-gray-300 text-sm md:text-base">+57 300 123 4567</p>
                     </div>
                     <div className="bg-gray-800 p-4 md:p-6 rounded-lg text-center aspect-square flex flex-col justify-center shadow-white shadow-lg">
@@ -41,7 +41,7 @@ export default function Contact() {
                     </div>
                     <div className="bg-gray-800 p-4 md:p-6 rounded-lg text-center aspect-square flex flex-col justify-center shadow-white shadow-lg">
                         <Image
-                            src="/icons/instagram.svg"
+                            src="/icons/instagramLogo.svg"
                             alt="Icono de Instagram"
                             width={48}
                             height={48}
