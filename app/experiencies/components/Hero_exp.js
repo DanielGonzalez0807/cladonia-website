@@ -8,7 +8,7 @@ export default function Hero_exp() {
 
       {/* Aquí va el HEADER */}
       <header className="relative top-0 left-0 w-full z-50">
-            <nav className="relative mx-auto max-w-au px-6 py-4 flex items-center justify-between bg-(--bg-header) backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)]">
+            <nav className="relative mx-auto max-w-au px-6 py-4 flex items-center justify-between bg-black/20 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)]">
             
             {/* Logo clickeable que redirige al inicio */}
             <Link href="/" className="invert">
@@ -38,21 +38,18 @@ export default function Hero_exp() {
         priority
       />
 
-      <div className="absolute inset-0 hero-overlay"></div>
-
-
       {/* CONTENIDO */}
-      <div className="relative z-10 h-full flex justify-center items-center mt-16">
+      <div className="relative z-10 h-full flex justify-center items-center mt-4">
         <div className="text-center max-w-7xl mx-auto px-6 pb-20 text-white">
-          <h2 className="text-4xl md:text-6xl font-medium mb-4 tracking-widest text-white">
+          <h2 className="text-4xl md:text-6xl font-medium mb-4 tracking-widest text-white drop-shadow-lg">
             Parque Natural Nacional
           </h2>
 
-          <h1 className="text-8xl md:text-9xl font-bold leading-tight">
+          <h1 className="text-8xl md:text-9xl font-bold leading-tight text-white drop-shadow-lg">
             CHINGAZA
           </h1>
-          <p className="mt-4 max-w-1200px text-2xl md:text-2xl text-white/90 text-balance">
-            Ven y vive esta maravillosa experiencia, acompañado de guias expertos
+          <p className="mt-4 max-w-1200px text-2xl md:text-2xl text-white drop-shadow-lg text-balance">
+            76,600 hectáreas de páramo y bosque altoandino te esperan. Desde 1977 protegiendo la biodiversidad de Colombia.
           </p>
         </div>
       </div>
