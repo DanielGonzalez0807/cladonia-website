@@ -1,6 +1,6 @@
 export default function Recommendations() {
     return (
-    <section className="relative w-full py-12 md:py-16 xl:py-20" style={{backgroundColor: '#F7F7F7'}}>
+    <section className="relative w-full py-12 md:py-16 xl:py-20 bg-white">
         <h2 className="text-2xl md:text-4xl font-bold text-center mt-8 md:mt-12 text-gray-900 mb-12">
         Recomendaciones para tu Visita
         </h2>

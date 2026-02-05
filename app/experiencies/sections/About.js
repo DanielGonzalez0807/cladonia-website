@@ -40,7 +40,7 @@ export default function About() {
   };
 
   return (
-    <section className="relative w-full min-h-screen flex flex-col justify-center text-gray-900 py-8" style={{backgroundColor: '#F7F7F7'}}>
+    <section className="relative w-full min-h-screen flex flex-col justify-center text-gray-900 py-8 bg-white">
       
       {/* Sección del título principal */}
       <div className="text-center mb-8">

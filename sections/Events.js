@@ -40,7 +40,7 @@ export default function Events() {
   const getPrevIndex = () => (currentImage - 1 + events.length) % events.length;
   const getNextIndex = () => (currentImage + 1) % events.length;
   return (
-    <section className="top-0 relative w-full py-8 md:py-12 text-gray-900" style={{backgroundColor: '#F7F7F7'}}>
+    <section className="top-0 relative w-full py-8 md:py-12 text-gray-900 bg-white">
       
       {/* TITULO */}
       <div className="text-center mb-8 md:mb-12">

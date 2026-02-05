@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Map() {
     return (
-        <section className="relative w-full min-h-screen flex flex-col text-black justify-center items-center px-6 py-12" style={{backgroundColor: 'var(--bg-color)'}}>
+        <section className="relative w-full min-h-screen flex flex-col text-black justify-center items-center px-6 py-12 bg-white">
             <div className="w-full max-w-6xl">
                 <h2 className="text-3xl md:text-5xl font-bold text-center mb-16 text-gray-900">
                     Detalles de la Aventura

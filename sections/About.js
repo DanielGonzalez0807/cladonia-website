@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function About() {
     return (
-        <section className="relative w-screen min-h-screen text-gray-900 py-12 md:py-20" style={{backgroundColor: '#F7F7F7'}}>  
+        <section className="relative w-screen min-h-screen text-gray-900 py-12 md:py-20 bg-white">  
             {/* TÍTULO */}
             <h2 className="text-2xl md:text-4xl font-bold text-gray-900 text-center mb-12 md:mb-16">C L A D O N I A</h2>
             
