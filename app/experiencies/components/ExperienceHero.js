@@ -1,0 +1,59 @@
+import Image from "next/image";
+import Link from "next/link";
+import ReserveButton from "@/app/_components/ui/ReserveButton";
+import { experiences } from "@/data/experiences";
+
+export default function ExperienceHero({ data = experiences.chingaza }) {
+  return (
+    <section className="relative h-screen w-screen overflow-hidden">
+
+      {/* Aquí va el HEADER */}
+      <header className="relative top-0 left-0 w-full z-50">
+            <nav className="relative mx-auto max-w-au px-6 py-4 flex items-center justify-between bg-black/20 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)]">
+            
+            {/* Logo clickeable que redirige al inicio */}
+            <Link href="/" className="invert">
+                    <Image src="/logo.svg" alt="Cladonia Logo" width={40} height={40} priority/>
+            </Link>
+            
+            {/* Título principal centrado */}
+            <Image
+                src="/tipografia.svg"
+                alt="Nombre del proyecto"
+                width={200} height={40}
+                className="absolute left-1/2 -translate-x-1/2 object-cover invert"
+            />
+
+            <ReserveButton slug={Object.keys(experiences).find(key => experiences[key] === data)} />
+
+            </nav>   
+        </header>
+      
+      {/* IMAGEN */}
+      <Image
+        src={data.hero.image}
+        alt="Hero background"
+        fill
+        className="object-cover object-center"
+        priority
+      />
+
+      {/* CONTENIDO */}
+      <div className="relative z-10 h-full flex justify-center items-center mt-4">
+        <div className="text-center max-w-7xl mx-auto px-6 pb-20 text-white">
+          <h2 className="text-4xl md:text-6xl font-medium mb-4 tracking-widest text-white drop-shadow-lg">
+            {data.subtitle}
+          </h2>
+
+          <h1 className="text-8xl md:text-9xl font-bold leading-tight text-white drop-shadow-lg">
+            {data.title.split(' ').pop().toUpperCase()}
+          </h1>
+          <p className="mt-4 max-w-1200px text-2xl md:text-2xl text-white drop-shadow-lg text-balance">
+            {data.hero.hectares} hectáreas de páramo y bosque altoandino te esperan. Desde {data.hero.founded} protegiendo la biodiversidad de Colombia.
+          </p>
+        </div>
+      </div>
+
+    </section>
+  );
+}
