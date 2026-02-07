@@ -16,7 +16,7 @@ export default function Map({ data = experiences.chingaza }) {
                     
                     <div className="bg-white rounded-2xl p-6 shadow-lg">
                         <div className="flex items-center mb-4">
-                            <FontAwesomeIcon icon={faRoute} style={{width: '36px', height: '36px'}} className="mr-3 text-green-600" />
+                            <FontAwesomeIcon icon={faRoute} style={{width: '32px', height: '32px'}} className="mr-3 text-green-600" />
                             <h3 className="text-xl font-bold text-gray-900">Distancia Total</h3>
                         </div>
                         <div className="mb-4">
@@ -34,7 +34,7 @@ export default function Map({ data = experiences.chingaza }) {
 
                     <div className="bg-white rounded-2xl p-6 shadow-lg">
                         <div className="flex items-center mb-4">
-                            <FontAwesomeIcon icon={faPersonHiking} style={{width: '36px', height: '36px'}} className="mr-3 text-orange-600" />
+                            <FontAwesomeIcon icon={faPersonHiking} style={{width: '32px', height: '32px'}} className="mr-3 text-orange-600" />
                             <h3 className="text-xl font-bold text-gray-900">Nivel de Dificultad</h3>
                         </div>
                         <div className="flex items-center mb-4">
@@ -52,7 +52,7 @@ export default function Map({ data = experiences.chingaza }) {
 
                     <div className="bg-white rounded-2xl p-6 shadow-lg">
                         <div className="flex items-center mb-4">
-                            <FontAwesomeIcon icon={faMountain} style={{width: '36px', height: '36px'}} className="mr-3 text-blue-600" />
+                            <FontAwesomeIcon icon={faMountain} style={{width: '32px', height: '32px'}} className="mr-3 text-blue-600" />
                             <h3 className="text-xl font-bold text-gray-900">Elevación</h3>
                         </div>
                         <div className="mb-4">
@@ -74,7 +74,7 @@ export default function Map({ data = experiences.chingaza }) {
                     
                     <div className="bg-white rounded-2xl p-6 shadow-lg">
                         <div className="flex items-center mb-4">
-                            <FontAwesomeIcon icon={faMapLocationDot} style={{width: '36px', height: '36px'}} className="mr-3 text-green-600" />
+                            <FontAwesomeIcon icon={faMapLocationDot} style={{width: '32px', height: '32px'}} className="mr-3 text-green-600" />
                             <h3 className="text-xl font-bold text-gray-900">Extensión del Parque</h3>
                         </div>
                         <div className="text-center">
@@ -86,7 +86,7 @@ export default function Map({ data = experiences.chingaza }) {
 
                     <div className="bg-white rounded-2xl p-6 shadow-lg">
                         <div className="flex items-center mb-4">
-                            <FontAwesomeIcon icon={faLeaf} style={{width: '36px', height: '36px'}} className="mr-3 text-green-600" />
+                            <FontAwesomeIcon icon={faLeaf} style={{width: '32px', height: '32px'}} className="mr-3 text-green-600" />
                             <h3 className="text-xl font-bold text-gray-900">Biodiversidad</h3>
                         </div>
                         <div className="space-y-3">
@@ -161,28 +161,28 @@ export default function Map({ data = experiences.chingaza }) {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <div className="flex flex-col items-center text-center">
                             <div className="bg-brown-100 p-4 rounded-full mb-3">
-                                <FontAwesomeIcon icon={faPaw} style={{width: '36px', height: '36px'}} className="text-brown-600" />
+                                <FontAwesomeIcon icon={faPaw} style={{width: '32px', height: '32px'}} className="text-brown-600" />
                             </div>
                             <p className="text-sm font-semibold text-gray-900">Oso Andino</p>
                             <p className="text-xs text-gray-600">Especie emblemática</p>
                         </div>
                         <div className="flex flex-col items-center text-center">
                             <div className="bg-gray-100 p-4 rounded-full mb-3">
-                                <FontAwesomeIcon icon={faDove} style={{width: '36px', height: '36px'}} className="text-gray-600" />
+                                <FontAwesomeIcon icon={faDove} style={{width: '32px', height: '32px'}} className="text-gray-600" />
                             </div>
                             <p className="text-sm font-semibold text-gray-900">Cóndor Andino</p>
                             <p className="text-xs text-gray-600">Ave nacional</p>
                         </div>
                         <div className="flex flex-col items-center text-center">
                             <div className="bg-yellow-100 p-4 rounded-full mb-3">
-                                <FontAwesomeIcon icon={faSeedling} style={{width: '36px', height: '36px'}} className="text-yellow-600" />
+                                <FontAwesomeIcon icon={faSeedling} style={{width: '32px', height: '32px'}} className="text-yellow-600" />
                             </div>
                             <p className="text-sm font-semibold text-gray-900">Frailejones</p>
                             <p className="text-xs text-gray-600">Flora característica</p>
                         </div>
                         <div className="flex flex-col items-center text-center">
                             <div className="bg-blue-100 p-4 rounded-full mb-3">
-                                <FontAwesomeIcon icon={faDroplet} style={{width: '36px', height: '36px'}} className="text-blue-600" />
+                                <FontAwesomeIcon icon={faDroplet} style={{width: '32px', height: '32px'}} className="text-blue-600" />
                             </div>
                             <p className="text-sm font-semibold text-gray-900">Lagos Glaciares</p>
                             <p className="text-xs text-gray-600">Lagunas de Siecha</p>

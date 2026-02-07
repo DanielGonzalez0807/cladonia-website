@@ -11,7 +11,7 @@ export default function Events() {
       title: "Caminata Ancestral",
       date: "Próximo 16 de marzo",
       cupos: "12 cupos disponibles",
-      description: "Recorre senderos milenarios siguiendo las huellas de nuestros ancestros. Descubre petroglifos, plantas medicinales y la sabiduría de los pueblos originarios en una experiencia transformadora."
+      description:"Recorre senderos milenarios siguiendo las huellas de nuestros ancestros. Descubre petroglifos, plantas medicinales y la sabiduría de los pueblos originarios en una experiencia transformadora."
     },
     {
       image: "/images/img_2.png",
@@ -66,6 +66,7 @@ export default function Events() {
               <div className="absolute top-4 left-4 right-4 text-white text-center">
                 <h3 className="text-lg font-bold mb-1">{event.title}</h3>
                 <p className="text-lg">{event.date}</p>
+                <p className="text-lg">{event.place}</p>
               </div>
               <div className="absolute bottom-4 left-4 right-4 text-white">
                 <p className="text-lg font-bold">{event.cupos}</p>

@@ -41,7 +41,7 @@ export const experiences = {
         image: "/images/act_2.png"
       },
       {
-        title: "Taller de Conservación",
+        title: "Taller de Honguitos",
         description: "Participa en actividades de preservación del hábitat natural. Aprende técnicas de reforestación, cuidado de especies y cómo contribuir a la protección del medio ambiente.",
         image: "/images/act_3.png"
       }
@@ -65,12 +65,12 @@ export const experiences = {
     hero: {
       image: "/images/img_2.png",
       hectares: "306,000",
-      founded: "1977"
+      founded: "1937"
     },
     about: [
       {
         image: "/images/img_2.png",
-        title: "COCUY",
+        title: "Este hermoso lugar!",
         description: "La Sierra Nevada del Cocuy alberga los glaciares tropicales más extensos de Colombia. Sus 25 picos nevados superan los 5,000 metros de altura, creando un paisaje único en el mundo."
       },
       {
