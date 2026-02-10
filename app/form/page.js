@@ -1,5 +1,5 @@
-import FormPage from './sections/form';
+import Form from './sections/form';
 
 export default function Page() {
-  return <FormPage />;
+  return <Form />;
 }
