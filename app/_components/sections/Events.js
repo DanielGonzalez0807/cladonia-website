@@ -1,150 +1,65 @@
-"use client";
 import Image from "next/image";
-import { useState } from "react";
-import ReserveButton from "../ui/ReserveButton";
+import { events } from "@/data/events";
+import EventReserveButton from "../ui/EventReserveButton";
 
 export default function Events() {
-  const [currentImage, setCurrentImage] = useState(0);
-  const events = [
-    {
-      image: "/images/img_1.png",
-      title: "Caminata Ancestral",
-      date: "Próximo 16 de marzo",
-      cupos: "12 cupos disponibles",
-      description:"Recorre senderos milenarios siguiendo las huellas de nuestros ancestros. Descubre petroglifos, plantas medicinales y la sabiduría de los pueblos originarios en una experiencia transformadora."
-    },
-    {
-      image: "/images/img_2.png",
-      title: "Tarde de Meditación",
-      date: "Próximo 23 de marzo",
-      cupos: "8 cupos disponibles",
-      description: "Encuentra la paz interior en medio de la naturaleza. Sesión de meditación guiada junto a cascadas naturales, respiración consciente y conexión profunda con el entorno."
-    },
-    {
-      image: "/images/img_3.png",
-      title: "Observación Nocturna",
-      date: "Próximo 30 de marzo",
-      cupos: "15 cupos disponibles",
-      description: "Explora la vida nocturna del bosque bajo un cielo estrellado. Avista fauna nocturna, escucha los sonidos de la noche y aprende sobre astronomía en un ambiente mágico."
-    }
-  ];
-
-  const nextImage = () => {
-    setCurrentImage((prev) => (prev + 1) % events.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImage((prev) => (prev - 1 + events.length) % events.length);
-  };
-
-  const getPrevIndex = () => (currentImage - 1 + events.length) % events.length;
-  const getNextIndex = () => (currentImage + 1) % events.length;
   return (
-    <section className="top-0 relative w-full py-8 md:py-12 text-gray-900 bg-white">
+    <section className="relative w-full text-gray-900 bg-white">
       
-      {/* TITULO */}
-      <div className="text-center mb-8 md:mb-12">
-        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
-        Eventos Programados
+      <div className="text-center mb-12 md:mb-24 px-4">
+        <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-gray-900">
+          Eventos Programados
         </h2>
       </div>
 
-      {/* SLIDER DESKTOP - CARRUSEL MÓVIL */}
-      <div className="relative w-full px-4 md:px-0">
-        
-        {/* Carrusel móvil */}
-        <div className="md:hidden flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
-          {events.map((event, index) => (
-            <div key={index} className="relative min-w-full aspect-video rounded-lg overflow-hidden snap-start">
-              <Image
-                src={event.image}
-                alt={event.title}
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-black/20"></div>
-              <div className="absolute top-4 left-4 right-4 text-white text-center">
-                <h3 className="text-lg font-bold mb-1">{event.title}</h3>
-                <p className="text-lg">{event.date}</p>
-                <p className="text-lg">{event.place}</p>
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+        {events.map((event, index) => (
+          <div key={event.id} className="mb-12 md:mb-20 lg:mb-24 last:mb-0">
+            <div className="md:hidden">
+              <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-6">
+                <Image
+                  src={event.image}
+                  alt={event.title}
+                  fill
+                  className="object-cover"
+                />
               </div>
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <p className="text-lg font-bold">{event.cupos}</p>
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{event.title}</h3>
+                <p className="text-sm text-gray-600 mb-1">{event.date}</p>
+                <p className="text-sm text-gray-600 mb-4">{event.cuposDisponibles} de {event.totalCupos} cupos disponibles</p>
+                <p className="text-base leading-relaxed text-gray-700 mb-4">
+                  {event.description}
+                </p>
+                <EventReserveButton eventId={event.id} cuposDisponibles={event.cuposDisponibles} />
               </div>
-              <div className="absolute bottom-4 right-4">
-                <ReserveButton />
-              </div>
-            </div>
-          ))}
-        </div>
-        
-        {/* Slider tablet y desktop */}
-        <div className="hidden md:flex items-center justify-center max-w-6xl mx-auto">
-          
-          {/* Flecha izquierda */}
-          <button onClick={prevImage} className="absolute left-2 md:left-6 z-20 text-black/30 hover:text-black/60 text-4xl md:text-6xl">
-            ‹
-          </button>
-
-          {/* IMAGEN ANTERIOR */}
-          <div className="relative w-1/4 aspect-video rounded-lg overflow-hidden opacity-60">
-            <Image
-              src={events[getPrevIndex()].image}
-              alt="Imagen anterior"
-              fill
-              className="object-cover"
-            />
-          </div>
-
-          {/* IMAGEN PRINCIPAL */}
-          <div className="relative w-1/2 aspect-video rounded-xl overflow-hidden shadow-xl z-10 mx-2 md:mx-4">
-            <Image
-              src={events[currentImage].image}
-              alt="Evento"
-              fill
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-black/40"></div>
-            
-            {/* Información del evento */}
-            <div className="absolute top-6 left-4 right-4 text-white text-center">
-              <h3 className="text-xl md:text-2xl font-bold mb-1">{events[currentImage].title}</h3>
-              <p className="text-xl md:text-lg font-bold text-white">{events[currentImage].date}</p>
             </div>
             
-            {/* Cupos disponibles */}
-            <div className="absolute bottom-4 left-4 text-white">
-              <p className="text-lg font-bold">{events[currentImage].cupos}</p>
-            </div>
+            <div className={`hidden md:grid md:grid-cols-2 gap-8 lg:gap-12 items-center`}>
+              <div className={index % 2 === 0 ? 'order-1' : 'order-2'}>
+                <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg">
+                  <Image
+                    src={event.image}
+                    alt={event.title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
 
-            <div className="absolute bottom-4 right-4">
-              <ReserveButton />
+              <div className={index % 2 === 0 ? 'order-2' : 'order-1'}>
+                <h3 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 mb-4">{event.title}</h3>
+                <p className="text-lg text-gray-600 mb-2">{event.date}</p>
+                <p className="text-lg text-gray-600 mb-4">{event.cuposDisponibles} de {event.totalCupos} cupos disponibles</p>
+                <p className="text-base lg:text-lg xl:text-xl leading-relaxed text-gray-700 mb-6">
+                  {event.description}
+                </p>
+                <EventReserveButton eventId={event.id} cuposDisponibles={event.cuposDisponibles} />
+              </div>
             </div>
           </div>
-
-          {/* IMAGEN SIGUIENTE */}
-          <div className="relative w-1/4 aspect-video rounded-lg overflow-hidden opacity-60">
-            <Image
-              src={events[getNextIndex()].image}
-              alt="Imagen siguiente"
-              fill
-              className="object-cover"
-            />
-          </div>
-
-          {/* Flecha derecha */}
-          <button onClick={nextImage} className="absolute right-2 md:right-6 z-20 text-black/30 hover:text-black/60 text-4xl md:text-6xl">
-            ›
-          </button>
-
-        </div>
-
+        ))}
       </div>
-
-      {/* DESCRIPCIÓN */}
-      <p className="mt-6 md:mt-10 max-w-2xl mx-auto text-center text-xs md:text-sm lg:text-base text-gray-600 px-4">
-        {events[currentImage].description}
-      </p>
 
     </section>
   );

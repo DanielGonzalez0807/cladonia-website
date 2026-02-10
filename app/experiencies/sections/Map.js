@@ -1,9 +1,8 @@
 "use client";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRoute, faPersonHiking, faMountain, faMapLocationDot, faLeaf, faDove, faPaw, faAward, faDroplet, faSeedling } from '@fortawesome/free-solid-svg-icons';
-import { experiences } from "@/data/experiences";
 
-export default function Map({ data = experiences.chingaza }) {
+export default function Map({ data }) {
     return (
         <section className="relative w-full min-h-screen flex flex-col text-black justify-center items-center px-6 py-12 bg-white">
             <div className="w-full max-w-6xl">

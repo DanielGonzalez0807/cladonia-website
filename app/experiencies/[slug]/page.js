@@ -7,6 +7,7 @@ import Map from "../sections/Map";
 import Recommendations from "../sections/Recommendations";
 import Bridge from "@/app/_components/ui/Bridge";
 import Experiencies from "@/app/_components/sections/Experiencies";
+import BridgeReservePdf from "@/app/_components/ui/BridgeReservePdf";
 
 export default async function ExperiencePage({ params }) {
   const { slug } = await params;
@@ -16,12 +17,16 @@ export default async function ExperiencePage({ params }) {
     notFound();
   }
 
+  // Serializar todo el objeto para evitar problemas con Client Components
+  const serializedExperience = JSON.parse(JSON.stringify(experience));
+
   return (
     <main>
-      <ExperienceHero data={experience} />
-      <About data={experience} />
-      <Activities data={experience} />
-      <Map data={experience} />
+      <ExperienceHero data={serializedExperience} slug={slug} />
+      <About data={serializedExperience} />
+      <BridgeReservePdf text="¿Quieres reservar esta experiencia?" slug={slug} />
+      <Activities data={serializedExperience} />
+      <Map data={serializedExperience} />
       <Recommendations />
       <Bridge text="Explora más experiencias" />
       <Experiencies />

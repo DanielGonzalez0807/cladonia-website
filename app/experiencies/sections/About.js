@@ -1,7 +1,6 @@
 import Image from "next/image";
-import { experiences } from "@/data/experiences";
 
-export default function About({ data = experiences.chingaza }) {
+export default function About({ data }) {
   const events = data.about;
 
   return (

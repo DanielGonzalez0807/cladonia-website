@@ -1,7 +1,6 @@
 import InfoCard from "@/app/_components/ui/InfoCard";
-import { experiences } from "@/data/experiences";
 
-export default function Activities({ data = experiences.chingaza }) {
+export default function Activities({ data }) {
     return (
         <section className="relative w-screen min-h-screen overflow-hidden py-12 md:py-20 flex justify-center bg-white">  
             <div className="max-w-7xl mx-auto px-4 md:px-6">

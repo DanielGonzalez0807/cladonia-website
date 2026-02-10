@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import ReserveButton from "@/app/_components/ui/ReserveButton";
-import { experiences } from "@/data/experiences";
 
-export default function ExperienceHero({ data = experiences.chingaza }) {
+export default function ExperienceHero({ data, slug }) {
   return (
     <section className="relative h-screen w-screen overflow-hidden">
 
@@ -24,7 +23,7 @@ export default function ExperienceHero({ data = experiences.chingaza }) {
                 className="absolute left-1/2 -translate-x-1/2 object-cover invert"
             />
 
-            <ReserveButton slug={Object.keys(experiences).find(key => experiences[key] === data)} />
+            <ReserveButton slug={slug} />
 
             </nav>   
         </header>

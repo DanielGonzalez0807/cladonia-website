@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { events } from "@/data/events";
 
 export default function FormPage() {
   const searchParams = useSearchParams();
@@ -11,6 +12,7 @@ export default function FormPage() {
   const [selectedPlan, setSelectedPlan] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     lastname: "",
@@ -26,7 +28,15 @@ export default function FormPage() {
   // Preseleccionar experiencia desde URL
   useEffect(() => {
     const experience = searchParams.get('experience');
-    if (experience) {
+    const destination = searchParams.get('destination');
+    const activity = searchParams.get('activity');
+    
+    if (destination === 'eventos' && activity) {
+      setSelectedDestination('eventos');
+      setSelectedActivity(activity);
+      const event = events.find(e => e.id === activity);
+      setSelectedEvent(event);
+    } else if (experience) {
       const experienceMap = {
         'chingaza': 'chingaza',
         'cocuy': 'zoque',
@@ -43,7 +53,8 @@ export default function FormPage() {
   const destinationPrices = {
     chingaza: { basic: 45000, standard: 74900, premium: 110000 },
     zoque: { basic: 50000, standard: 80000, premium: 120000 },
-    fotografico: { basic: 60000, standard: 90000, premium: 140000 }
+    fotografico: { basic: 60000, standard: 90000, premium: 140000 },
+    eventos: { basic: 40000, standard: 65000, premium: 95000 }
   };
 
   const getCurrentPrices = () => {
@@ -98,6 +109,11 @@ export default function FormPage() {
       { value: "amanecer_montaña", label: "Fotografía de amanecer en montaña" },
       { value: "macro_flora", label: "Macrofotografía de flora" },
       { value: "paisajes_aereos", label: "Paisajes aéreos con drone" }
+    ],
+    eventos: [
+      { value: "caminata_ancestral", label: "Caminata Ancestral" },
+      { value: "tarde_meditacion", label: "Tarde de Meditación" },
+      { value: "observacion_nocturna", label: "Observación Nocturna" }
     ]
   };
 
@@ -107,12 +123,17 @@ export default function FormPage() {
 
   const handleDestinationChange = (e) => {
     setSelectedDestination(e.target.value);
-    setSelectedActivity(""); // Reset activity selection when destination changes
-    setSelectedPlan(""); // Reset plan selection when destination changes
+    setSelectedActivity("");
+    setSelectedPlan("");
+    setSelectedEvent(null);
   };
 
   const handleActivityChange = (e) => {
     setSelectedActivity(e.target.value);
+    if (selectedDestination === 'eventos') {
+      const event = events.find(ev => ev.id === e.target.value);
+      setSelectedEvent(event);
+    }
   };
 
   const handlePlanChange = (planValue) => {
@@ -145,6 +166,13 @@ export default function FormPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isFormValid()) {
+      if (selectedDestination === 'eventos' && selectedEvent) {
+        const totalPersons = (parseInt(formData.children) || 0) + (parseInt(formData.adults) || 0) + (parseInt(formData.seniors) || 0);
+        if (totalPersons > selectedEvent.cuposDisponibles) {
+          alert(`Solo hay ${selectedEvent.cuposDisponibles} cupos disponibles`);
+          return;
+        }
+      }
       router.push('/confirmation');
     }
   };
@@ -199,6 +227,7 @@ export default function FormPage() {
                             <option value="chingaza">Parque Nacional Chingaza</option>
                             <option value="zoque">Sierra Nevada del Cocuy</option>
                             <option value="fotografico">Tour Fotográfico</option>
+                            <option value="eventos">Eventos Programados</option>
                         </select>
                     </div>
                     {selectedDestination && (
@@ -212,6 +241,17 @@ export default function FormPage() {
                                     <option key={activity.value} value={activity.value}>{activity.label}</option>
                                 ))}
                             </select>
+                        </div>
+                    )}
+                    {selectedDestination === 'eventos' && selectedEvent && (
+                        <div className="p-4 bg-yellow-400/10 border border-yellow-400 rounded-lg">
+                            <h4 className="text-lg font-semibold text-yellow-400 mb-2">Cupos Disponibles</h4>
+                            <p className="text-white">
+                                <span className="font-bold text-2xl">{selectedEvent.cuposDisponibles}</span> de {selectedEvent.totalCupos} cupos disponibles
+                            </p>
+                            <p className="text-gray-300 text-sm mt-2">
+                                Selecciona el número de personas que no exceda los cupos disponibles
+                            </p>
                         </div>
                     )}
                     <div className="flex flex-col md:flex-row gap-4">
