@@ -16,10 +16,6 @@ export default function BridgeReserve({ text }) {
                     className="bg-yellow-400 text-black px-16 py-1 rounded-full text-sm font-bold hover:bg-yellow-500 transition">
                     Reservar
                     </Link>
-                    <button
-                    className="bg-gray-800 text-white px-12 py-1 rounded-full text-sm font-bold hover:bg-gray-700 transition">
-                    Descargar PDF
-                    </button>
                 </div>
             </div>
         </section>
