@@ -26,7 +26,13 @@ export function useEvents() {
         totalCupos: event.total_cupos,
         cuposDisponibles: event.cupos_disponibles,
         description: event.descripcion,
-        image: event.imagen
+        image: event.imagen,
+        lugarPartida: event.lugar_partida,
+        horaPartida: event.hora_partida,
+        horaRegreso: event.hora_regreso,
+        incluye: event.incluye || [],
+        itinerarioDescripcion: event.itinerario_descripcion,
+        precio: event.precio
       }));
 
       setEvents(transformedEvents);
