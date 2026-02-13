@@ -69,13 +69,13 @@ export default function Form() {
   }, [searchParams, events.length]);
 
   const currentPrices = useMemo(() => {
-    if (!selectedDestination) return null;
+    if (!selectedActivity) return null;
     return {
-      basic: plans.basic.prices[selectedDestination],
-      standard: plans.standard.prices[selectedDestination],
-      premium: plans.premium.prices[selectedDestination]
+      basic: plans.basic.prices[selectedActivity],
+      standard: plans.standard.prices[selectedActivity],
+      premium: plans.premium.prices[selectedActivity]
     };
-  }, [selectedDestination]);
+  }, [selectedActivity]);
 
   const calculation = useMemo(() => {
     if (!selectedPlan || !currentPrices) return null;
@@ -468,7 +468,7 @@ export default function Form() {
                         </div>
                         {currentPrices && (
                           <div className="text-center mb-6">
-                            <div className="text-3xl font-bold text-white">${(plan.prices[selectedDestination] / 1000).toFixed(0)}K</div>
+                            <div className="text-3xl font-bold text-white">${(plan.prices[selectedActivity] / 1000).toFixed(0)}K</div>
                             <div className="text-gray-300 text-sm">por persona</div>
                           </div>
                         )}

@@ -9,10 +9,22 @@ export const plans = {
       'Póliza de seguro incluida'
     ],
     prices: {
-      chingaza: 45000,
-      zoque: 50000,
-      fotografico: 60000,
-      eventos: 40000
+      // Chingaza
+      lagunas_siecha: 45000,
+      observacion_aves: 50000,
+      fotografia_paisaje: 55000,
+      // Zoque
+      caminata_ecologica: 50000,
+      avistamiento_fauna: 55000,
+      plantas_medicinales: 48000,
+      // Fotográfico
+      amanecer_montaña: 60000,
+      macro_flora: 58000,
+      paisajes_aereos: 70000,
+      // Eventos
+      caminata_ancestral: 40000,
+      tarde_meditacion: 38000,
+      observacion_nocturna: 45000
     }
   },
   standard: {
@@ -26,10 +38,22 @@ export const plans = {
       'Transporte incluido'
     ],
     prices: {
-      chingaza: 74900,
-      zoque: 80000,
-      fotografico: 90000,
-      eventos: 65000
+      // Chingaza
+      lagunas_siecha: 74900,
+      observacion_aves: 80000,
+      fotografia_paisaje: 85000,
+      // Zoque
+      caminata_ecologica: 80000,
+      avistamiento_fauna: 85000,
+      plantas_medicinales: 78000,
+      // Fotográfico
+      amanecer_montaña: 90000,
+      macro_flora: 88000,
+      paisajes_aereos: 100000,
+      // Eventos
+      caminata_ancestral: 65000,
+      tarde_meditacion: 63000,
+      observacion_nocturna: 70000
     }
   },
   premium: {
@@ -44,10 +68,22 @@ export const plans = {
       'Guía bilingüe disponible'
     ],
     prices: {
-      chingaza: 110000,
-      zoque: 120000,
-      fotografico: 140000,
-      eventos: 95000
+      // Chingaza
+      lagunas_siecha: 110000,
+      observacion_aves: 120000,
+      fotografia_paisaje: 130000,
+      // Zoque
+      caminata_ecologica: 120000,
+      avistamiento_fauna: 130000,
+      plantas_medicinales: 115000,
+      // Fotográfico
+      amanecer_montaña: 140000,
+      macro_flora: 135000,
+      paisajes_aereos: 160000,
+      // Eventos
+      caminata_ancestral: 95000,
+      tarde_meditacion: 90000,
+      observacion_nocturna: 100000
     }
   }
 };
