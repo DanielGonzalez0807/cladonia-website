@@ -8,9 +8,15 @@ import "react-datepicker/dist/react-datepicker.css";
 import toast from "react-hot-toast";
 import { plans } from "@/data/plans";
 import { activities } from "@/data/activities";
+import { guideRates } from "@/data/guideRates";
+import { topPlanDates } from "@/data/topPlanDates";
 import TermsModal from "@/app/_components/ui/TermsModal";
 import { supabase } from "@/lib/supabase";
 import { useEvents } from "@/hooks/useEvents";
+import { saveReservation, getFechaProgramadaId } from '@/lib/reservations';
+import BasicPlan from "./plans/BasicPlan";
+import TopPlan from "./plans/TopPlan";
+import DynamicPlan from "./plans/DynamicPlan";
 
 const EXPERIENCE_MAP = {
   'chingaza': 'chingaza',
@@ -28,6 +34,7 @@ export default function Form() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [selectedTopDate, setSelectedTopDate] = useState("");
 
   const { register, handleSubmit, control, watch, formState: { errors } } = useForm({
     mode: "onBlur",
@@ -48,6 +55,12 @@ export default function Form() {
   });
 
   const { children, adults, seniors, foreigners, acceptTerms, acceptPrivacy } = watch();
+  const [vehicleCounts, setVehicleCounts] = useState({ car: 0, minibus: 0, bus: 0 });
+  const [dynamicOptions, setDynamicOptions] = useState({
+    includeTransport: false,
+    selectedMeals: [],
+    selectedGuide: null
+  });
 
   useEffect(() => {
     if (events.length === 0) return;
@@ -73,8 +86,8 @@ export default function Form() {
     if (!selectedActivity) return null;
     return {
       basic: plans.basic.prices[selectedActivity],
-      standard: plans.standard.prices[selectedActivity],
-      premium: plans.premium.prices[selectedActivity]
+      top: plans.top.prices[selectedActivity],
+      dynamic: plans.dynamic.prices[selectedActivity]
     };
   }, [selectedActivity]);
 
@@ -86,7 +99,7 @@ export default function Form() {
     const seniorsCount = parseInt(seniors) || 0;
     const foreignersCount = parseInt(foreigners) || 0;
     
-    const totalPersons = childrenCount + adultsCount;
+    const totalPersons = childrenCount + adultsCount + seniorsCount + foreignersCount;
     if (totalPersons === 0) return null;
     
     let total = 0;
@@ -100,14 +113,35 @@ export default function Form() {
                 (seniorsCount * rates.seniors) + 
                 (foreignersCount * rates.foreigners);
       }
+    } else if (selectedPlan === 'dynamic') {
+      // Plan Dinámico: precio base + opciones adicionales
+      const basePrice = currentPrices[selectedPlan];
+      total = basePrice * totalPersons;
+      
+      // Agregar transporte
+      if (dynamicOptions.includeTransport) {
+        total += 50000 * totalPersons;
+      }
+      
+      // Agregar comidas
+      const mealPrices = { breakfast: 15000, snack: 8000, lunch: 25000 };
+      dynamicOptions.selectedMeals.forEach(mealId => {
+        total += mealPrices[mealId] * totalPersons;
+      });
+      
+      // Agregar guía especializado
+      if (dynamicOptions.selectedGuide) {
+        const guidePrices = { photography: 100000, biology: 120000, bilingual: 150000 };
+        total += guidePrices[dynamicOptions.selectedGuide];
+      }
     } else {
-      // Planes Estándar y Premium: precio único por persona
+      // Plan Top: precio único por persona
       const basePrice = currentPrices[selectedPlan];
       total = basePrice * totalPersons;
     }
     
     return { totalPersons, total };
-  }, [selectedPlan, currentPrices, children, adults, seniors, foreigners, selectedActivity]);
+  }, [selectedPlan, currentPrices, children, adults, seniors, foreigners, selectedActivity, dynamicOptions]);
   
   const formatPrice = (price) => {
     return new Intl.NumberFormat('es-CO', {
@@ -138,81 +172,207 @@ export default function Form() {
 
   const onSubmit = async (data) => {
     try {
-      if (selectedDestination === 'eventos' && selectedEvent) {
-        const totalPersons = (parseInt(data.children) || 0) + (parseInt(data.adults) || 0);
-        if (totalPersons > selectedEvent.cuposDisponibles) {
-          toast.error(`Solo hay ${selectedEvent.cuposDisponibles} cupos disponibles`);
-          return;
-        }
 
-        // Actualizar cupos del evento
-        const cuposResponse = await fetch('/api/update-cupos', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            eventId: selectedEvent.id,
-            personas: totalPersons
-          })
+      const totalPersons = (parseInt(data.children) || 0) + (parseInt(data.adults) || 0) + (parseInt(data.seniors) || 0) + (parseInt(data.foreigners) || 0);
+
+      // Preparar datos base
+      const formData = {
+        name: data.name,
+        lastname: data.lastname,
+        tel: data.tel,
+        email: data.email,
+        date: selectedPlan === 'top' ? selectedTopDate : data.date,
+        children: data.children,
+        adults: data.adults,
+        seniors: data.seniors,
+        foreigners: data.foreigners,
+        description: data.description,
+        selectedDestination,
+        selectedActivity,
+        selectedPlan,
+        totalPrice: calculation?.total || 0,
+        totalPersons
+      };
+
+      // Preparar detalles específicos según el plan
+      let planDetails = {};
+
+      if (selectedPlan === 'basic') {
+        const childrenCount = parseInt(data.children) || 0;
+        const adultsCount = parseInt(data.adults) || 0;
+        const seniorsCount = parseInt(data.seniors) || 0;
+        const foreignersCount = parseInt(data.foreigners) || 0;
+        const totalVisitors = childrenCount + adultsCount + seniorsCount + foreignersCount;
+        
+        const parkEntryRates = { exempt: 0, student: 24500, adult: 29000, foreigner: 78500 };
+        const insurancePerPerson = 10000;
+        const guideRate = guideRates[selectedActivity] || 0;
+        
+        const costoEntradas = (seniorsCount * parkEntryRates.exempt) + 
+                             (childrenCount * parkEntryRates.student) + 
+                             (adultsCount * parkEntryRates.adult) + 
+                             (foreignersCount * parkEntryRates.foreigner);
+        
+        const costoPolizas = totalVisitors * insurancePerPerson;
+        const costoVehiculos = (vehicleCounts.car * 15000) + 
+                              (vehicleCounts.minibus * 25000) + 
+                              (vehicleCounts.bus * 40000);
+
+        planDetails = {
+          vehicleCounts,
+          costoEntradas,
+          costoPolizas,
+          costoGuia: guideRate,
+          costoVehiculos
+        };
+      } 
+      else if (selectedPlan === 'top') {
+        const fechaProgramadaId = await getFechaProgramadaId(selectedActivity, selectedTopDate);
+        
+        planDetails = {
+          fechaProgramadaId,
+          totalPersonas: totalPersons
+        };
+      } 
+      else if (selectedPlan === 'dynamic') {
+        const opcionesSeleccionadas = [];
+        
+        // Agregar transporte si está seleccionado
+        if (dynamicOptions.includeTransport) {
+          opcionesSeleccionadas.push({
+            id: 'transport',
+            cantidad: totalPersons,
+            precioUnitario: 50000,
+            precioTotal: 50000 * totalPersons
+          });
+        }
+        
+        // Agregar comidas seleccionadas
+        const mealPrices = { breakfast: 15000, snack: 8000, lunch: 25000 };
+        dynamicOptions.selectedMeals.forEach(mealId => {
+          opcionesSeleccionadas.push({
+            id: mealId,
+            cantidad: totalPersons,
+            precioUnitario: mealPrices[mealId],
+            precioTotal: mealPrices[mealId] * totalPersons
+          });
         });
-
-        if (!cuposResponse.ok) {
-          toast.error('Error al actualizar cupos del evento');
-          return;
+        
+        // Agregar guía especializado
+        if (dynamicOptions.selectedGuide) {
+          const guidePrices = { photography: 100000, biology: 120000, bilingual: 150000 };
+          opcionesSeleccionadas.push({
+            id: dynamicOptions.selectedGuide,
+            cantidad: 1,
+            precioUnitario: guidePrices[dynamicOptions.selectedGuide],
+            precioTotal: guidePrices[dynamicOptions.selectedGuide]
+          });
         }
+
+        planDetails = {
+          precioBase: currentPrices[selectedPlan] * totalPersons,
+          opcionesSeleccionadas
+        };
       }
 
-      const reservaData = {
+      // Guardar reserva en Supabase
+      const result = await saveReservation(formData, planDetails);
+
+      if (!result.success) {
+        console.error('Error en saveReservation:', result.error);
+        throw new Error(result.error);
+      }
+
+      // Preparar datos para el email
+      const senderoNombre = activities['PNN CHINGAZA'].find(a => a.value === selectedActivity)?.label || selectedActivity;
+      
+      const emailData = {
+        email: data.email,
         nombre: data.name,
         apellido: data.lastname,
         telefono: data.tel,
-        email: data.email,
         destino: selectedDestination,
-        actividad: selectedActivity,
+        sendero: senderoNombre,
         plan: selectedPlan,
-        fecha: selectedDestination === 'eventos' && selectedEvent ? selectedEvent.date : data.date,
-        ninos: parseInt(data.children) || 0,
+        planNombre: plans[selectedPlan].name,
+        fecha: formData.date,
+        total: formData.totalPrice,
+        estudiantes: parseInt(data.children) || 0,
         adultos: parseInt(data.adults) || 0,
-        mayores: parseInt(data.seniors) || 0,
+        exentos: parseInt(data.seniors) || 0,
         extranjeros: parseInt(data.foreigners) || 0,
-        observaciones: data.description || null,
-        total: calculation?.total || 0
+        planDetails: {}
       };
 
-      const { data: reserva, error } = await supabase
-        .from('reservas')
-        .insert([reservaData])
-        .select();
+      // Agregar detalles específicos del plan para el email
+      if (selectedPlan === 'basic') {
+        const vehiculosTexto = [];
+        if (vehicleCounts.car > 0) vehiculosTexto.push(`${vehicleCounts.car} automóvil(es)`);
+        if (vehicleCounts.minibus > 0) vehiculosTexto.push(`${vehicleCounts.minibus} microbus(es)`);
+        if (vehicleCounts.bus > 0) vehiculosTexto.push(`${vehicleCounts.bus} bus(es)`);
+        
+        emailData.planDetails = {
+          costoEntradas: planDetails.costoEntradas,
+          costoPolizas: planDetails.costoPolizas,
+          costoGuia: planDetails.costoGuia,
+          costoVehiculos: planDetails.costoVehiculos,
+          vehiculos: vehiculosTexto.join(', ') || 'Ninguno',
+          transporteIncluido: false
+        };
+      } else if (selectedPlan === 'top') {
+        emailData.planDetails = {
+          transporteIncluido: true
+        };
+      } else if (selectedPlan === 'dynamic') {
+        const opcionesNombres = {
+          transport: 'Transporte',
+          breakfast: 'Desayuno',
+          snack: 'Refrigerio',
+          lunch: 'Almuerzo',
+          photography: 'Guía Experto en Fotografía',
+          biology: 'Guía Experto en Biología',
+          bilingual: 'Guía Bilingüe'
+        };
+        
+        const opcionesParaEmail = planDetails.opcionesSeleccionadas && planDetails.opcionesSeleccionadas.length > 0
+          ? planDetails.opcionesSeleccionadas.map(op => ({
+              nombre: opcionesNombres[op.id] || op.id,
+              cantidad: op.cantidad,
+              precioTotal: op.precioTotal
+            }))
+          : [];
+        
+        emailData.planDetails = {
+          opciones: opcionesParaEmail,
+          transporteIncluido: dynamicOptions.includeTransport
+        };
+      }
 
-      if (error) throw error;
-
-      // Enviar email de confirmación al cliente
-      await fetch('/api/send-confirmation', {
+      // Enviar email de confirmación
+      const emailResponse = await fetch('/api/send-confirmation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: data.email,
-          nombre: data.name,
-          apellido: data.lastname,
-          destino: selectedDestination,
-          actividad: selectedActivity,
-          plan: plans[selectedPlan].name,
-          fecha: selectedDestination === 'eventos' && selectedEvent ? selectedEvent.date : data.date,
-          total: calculation?.total || 0,
-          ninos: parseInt(data.children) || 0,
-          adultos: parseInt(data.adults) || 0,
-          mayores: parseInt(data.seniors) || 0,
-          extranjeros: parseInt(data.foreigners) || 0,
-          telefono: data.tel
-        })
+        body: JSON.stringify(emailData)
       });
 
-      toast.success('¡Reserva enviada exitosamente!');
+      const emailResult = await emailResponse.json();
+      
+      if (!emailResponse.ok) {
+        console.error('Error al enviar email:', emailResult);
+        toast.error('Reserva guardada pero hubo un error al enviar el email de confirmación');
+      } else {
+        console.log('Email enviado exitosamente:', emailResult);
+      }
+
+      toast.success('¡Reserva guardada exitosamente!');
       setTimeout(() => {
         router.push('/confirmation');
       }, 1500);
     } catch (error) {
-      console.error('Error al guardar reserva:', error);
-      toast.error('Error al enviar la reserva. Intenta nuevamente.');
+      const errorMessage = error?.message || error?.toString() || 'Error desconocido';
+      console.error('Error al guardar reserva:', errorMessage);
+      console.error('Detalles del error:', error);
+      toast.error(`Error: ${errorMessage}`);
     }
   };
 
@@ -301,10 +461,7 @@ export default function Form() {
                   }`}
                 >
                   <option value="">Selecciona un destino</option>
-                  <option value="chingaza">Parque Nacional Chingaza</option>
-                  <option value="zoque">Sierra Nevada del Cocuy</option>
-                  <option value="fotografico">Tour Fotográfico</option>
-                  <option value="eventos">Eventos Programados</option>
+                  <option value="PNN CHINGAZA">PNN CHINGAZA</option>
                 </select>
               </div>
 
@@ -323,6 +480,33 @@ export default function Form() {
                       <option key={activity.value} value={activity.value}>{activity.label}</option>
                     ))}
                   </select>
+                </div>
+              )}
+
+              {selectedDestination !== 'eventos' && selectedPlan !== 'top' && (
+                <div className="flex justify-center">
+                  <div className="w-full max-w-md">
+                    <label className="block text-sm font-medium mb-1 text-center">Fecha de Reserva</label>
+                    <div className="flex justify-center">
+                      <Controller
+                        control={control}
+                        name="date"
+                        rules={{ required: selectedPlan !== 'top' ? "Fecha es requerida" : false }}
+                        render={({ field }) => (
+                          <DatePicker
+                            selected={field.value}
+                            onChange={(date) => field.onChange(date)}
+                            minDate={new Date()}
+                            dateFormat="dd/MM/yyyy"
+                            placeholderText="Selecciona una fecha"
+                            className="w-full px-4 py-2 rounded-md bg-white text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-center"
+                            wrapperClassName="w-full"
+                          />
+                        )}
+                      />
+                    </div>
+                    {errors.date && <span className="text-yellow-400 text-sm font-semibold block text-center mt-1">{errors.date.message}</span>}
+                  </div>
                 </div>
               )}
 
@@ -356,73 +540,76 @@ export default function Form() {
                 </>
               )}
 
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1">
-                  <label htmlFor="children" className="block text-sm font-medium mb-1">Niños o Estudiantes</label>
-                  <input 
-                    type="number" 
-                    {...register("children", { min: 0 })}
-                    className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                  />
-                </div>
-                <div className="flex-1">
-                  <label htmlFor="adults" className="block text-sm font-medium mb-1">Adultos</label>
-                  <input 
-                    type="number" 
-                    {...register("adults", { min: 1 })}
-                    className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                  />
-                </div>
-                <div className="flex-1">
-                  <label htmlFor="seniors" className="block text-sm font-medium mb-1">Mayores de 60</label>
-                  <input 
-                    type="number" 
-                    {...register("seniors", { 
-                      min: 0, 
-                      validate: value => !value || parseInt(value) <= (parseInt(adults) || 0) || "No puede exceder el número de adultos"
-                    })}
-                    className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                  />
-                </div>
-                <div className="flex-1">
-                  <label htmlFor="foreigners" className="block text-sm font-medium mb-1">Extranjeros</label>
-                  <input 
-                    type="number" 
-                    {...register("foreigners", { 
-                      min: 0, 
-                      validate: value => !value || parseInt(value) <= (parseInt(adults) || 0) || "No puede exceder el número de adultos"
-                    })}
-                    className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                  />
-                </div>
-              </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-4 text-center">Tipo de Visitante</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* Exentos - Primero */}
+                  <div className="bg-gray-800/60 p-4 rounded-lg border border-gray-600">
+                    <label htmlFor="seniors" className="block text-sm font-bold mb-2">Exentos</label>
+                    <input 
+                      type="number" 
+                      {...register("seniors", { 
+                        min: { value: 0, message: "No puede ser negativo" },
+                        valueAsNumber: true
+                      })}
+                      className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    />
+                    <ul className="mt-3 text-xs text-gray-300 space-y-1">
+                      <li>• Mayores de 60 años</li>
+                      <li>• Entrada gratuita</li>
+                      <li>• Presentar documento</li>
+                    </ul>
+                  </div>
 
-              {selectedDestination !== 'eventos' && (
-                <div className="flex justify-center">
-                  <div className="w-full max-w-md">
-                    <label className="block text-sm font-medium mb-1 text-center">Fecha de Reserva</label>
-                    <div className="flex justify-center">
-                      <Controller
-                        control={control}
-                        name="date"
-                        rules={{ required: "Fecha es requerida" }}
-                        render={({ field }) => (
-                          <DatePicker
-                            selected={field.value}
-                            onChange={(date) => field.onChange(date)}
-                            minDate={new Date()}
-                            dateFormat="dd/MM/yyyy"
-                            placeholderText="Selecciona una fecha"
-                            className="w-full px-4 py-2 rounded-md bg-white text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-center"
-                            wrapperClassName="w-full"
-                          />
-                        )}
-                      />
-                    </div>
-                    {errors.date && <span className="text-yellow-400 text-sm font-semibold block text-center mt-1">{errors.date.message}</span>}
+                  {/* Estudiantes */}
+                  <div className="bg-gray-800/60 p-4 rounded-lg border border-gray-600">
+                    <label htmlFor="children" className="block text-sm font-bold mb-2">Estudiantes</label>
+                    <input 
+                      type="number" 
+                      {...register("children", { min: 0 })}
+                      className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    />
+                    <ul className="mt-3 text-xs text-gray-300 space-y-1">
+                      <li>• 5 a 25 años</li>
+                      <li>• Tarifa reducida</li>
+                      <li>• Carné estudiantil</li>
+                    </ul>
+                  </div>
+
+                  {/* Adultos */}
+                  <div className="bg-gray-800/60 p-4 rounded-lg border border-gray-600">
+                    <label htmlFor="adults" className="block text-sm font-bold mb-2">Adultos</label>
+                    <input 
+                      type="number" 
+                      {...register("adults", { min: 1 })}
+                      className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    />
+                    <ul className="mt-3 text-xs text-gray-300 space-y-1">
+                      <li>• 26 a 59 años</li>
+                      <li>• Tarifa general</li>
+                      <li>• Documento de identidad</li>
+                    </ul>
+                  </div>
+
+                  {/* Extranjeros */}
+                  <div className="bg-gray-800/60 p-4 rounded-lg border border-gray-600">
+                    <label htmlFor="foreigners" className="block text-sm font-bold mb-2">Extranjeros</label>
+                    <input 
+                      type="number" 
+                      {...register("foreigners", { 
+                        min: { value: 0, message: "No puede ser negativo" },
+                        valueAsNumber: true
+                      })}
+                      className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    />
+                    <ul className="mt-3 text-xs text-gray-300 space-y-1">
+                      <li>• No residentes</li>
+                      <li>• Tarifa especial</li>
+                      <li>• Pasaporte requerido</li>
+                    </ul>
                   </div>
                 </div>
-              )}
+              </div>
 
               <div>
                 <label htmlFor="description" className="block text-sm font-medium mb-1">Observaciones (máx. 120 caracteres)</label>
@@ -456,26 +643,8 @@ export default function Form() {
                   </label>
                 </div>
               </div>
-            </form>
-          </div>
-        </div>
-      </section>
 
-      
-      {/* Sección de Planes */}
-      <section className="relative w-full min-h-screen overflow-hidden">
-        <Image 
-          src="/images/exp_1.png" 
-          alt="Background" 
-          fill
-          className="object-cover object-center" 
-        />
-        
-        <div className="absolute inset-0 bg-black/60"></div>
-        
-        <div className="relative z-10 min-h-screen flex flex-col justify-center text-white py-8">
-          <div className="w-full max-w-5xl mx-auto px-4 md:px-8 lg:px-12">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-6">
+              {/* Sección de Planes - Dentro del mismo formulario */}
               <div className="mt-8">
                 <h3 className="text-lg font-semibold mb-8 text-center">Selecciona tu Plan</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -520,49 +689,54 @@ export default function Form() {
 
                 {selectedPlan && currentPrices && (
                   <>
-                    {selectedPlan === 'basic' && selectedActivity && plans.basic.rates[selectedActivity] && (
-                      <div className="mt-6 p-4 bg-blue-400/10 border border-blue-400 rounded-lg">
-                        <h4 className="text-lg font-semibold text-blue-400 mb-3">Tarifas Plan Básico</h4>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                          <div className="text-white">
-                            <p className="font-semibold">Niños/Estudiantes</p>
-                            <p className="text-xs text-gray-300">(5 a 25 años)</p>
-                            <p className="text-blue-400 font-bold text-lg">${(plans.basic.rates[selectedActivity].children / 1000).toFixed(0)}K</p>
-                          </div>
-                          <div className="text-white">
-                            <p className="font-semibold">Adultos</p>
-                            <p className="text-xs text-gray-300">(26 a 59 años)</p>
-                            <p className="text-blue-400 font-bold text-lg">${(plans.basic.rates[selectedActivity].adults / 1000).toFixed(0)}K</p>
-                          </div>
-                          <div className="text-white">
-                            <p className="font-semibold">Mayores 60+</p>
-                            <p className="text-xs text-gray-300">Exentos</p>
-                            <p className="text-green-400 font-bold text-lg">Gratis</p>
-                          </div>
-                          <div className="text-white">
-                            <p className="font-semibold">Extranjeros</p>
-                            <p className="text-xs text-gray-300">Tarifa especial</p>
-                            <p className="text-blue-400 font-bold text-lg">${(plans.basic.rates[selectedActivity].foreigners / 1000).toFixed(0)}K</p>
-                          </div>
-                        </div>
-                      </div>
+                    {selectedPlan === 'basic' && (
+                      <BasicPlan
+                        plans={plans}
+                        activities={activities}
+                        selectedActivity={selectedActivity}
+                        childrenCount={children}
+                        adults={adults}
+                        seniors={seniors}
+                        foreigners={foreigners}
+                        guideRates={guideRates}
+                        vehicleCounts={vehicleCounts}
+                        setVehicleCounts={setVehicleCounts}
+                        formatPrice={formatPrice}
+                        watch={watch}
+                      />
                     )}
                     
-                    <div className="mt-6 p-4 bg-yellow-400/10 border border-yellow-400 rounded-lg">
-                      <p className="text-center text-yellow-400 font-semibold">
-                        Plan seleccionado: {plans[selectedPlan].name}
-                      </p>
-                      {calculation && (
-                        <div className="mt-4 text-center">
-                          <p className="text-yellow-400 font-bold text-xl">
-                            Total: {formatPrice(calculation.total)}
-                          </p>
-                          <p className="text-gray-300 text-xs mt-1">
-                            Para {calculation.totalPersons} personas
-                          </p>
-                        </div>
-                      )}
-                    </div>
+                    {selectedPlan === 'top' && (
+                      <TopPlan
+                        plans={plans}
+                        activities={activities}
+                        selectedActivity={selectedActivity}
+                        topPlanDates={topPlanDates}
+                        selectedTopDate={selectedTopDate}
+                        setSelectedTopDate={setSelectedTopDate}
+                        currentPrices={currentPrices}
+                        calculation={calculation}
+                        formatPrice={formatPrice}
+                        watch={watch}
+                      />
+                    )}
+                    
+                    {selectedPlan === 'dynamic' && (
+                      <DynamicPlan
+                        plans={plans}
+                        activities={activities}
+                        selectedActivity={selectedActivity}
+                        selectedPlan={selectedPlan}
+                        childrenCount={children}
+                        adults={adults}
+                        seniors={seniors}
+                        foreigners={foreigners}
+                        currentPrices={currentPrices}
+                        formatPrice={formatPrice}
+                        watch={watch}
+                        onOptionsChange={setDynamicOptions}
+                      />
+                    )}
                   </>
                 )}
               </div>
