@@ -14,8 +14,9 @@ export function useEvents() {
       const { data, error } = await supabase
         .from('eventos')
         .select('*')
-        .order('fecha', { ascending: true });
-
+        .eq('activo', true)
+        .order('fecha', { ascending: true })
+        .limit(1);
       if (error) throw error;
 
       // Transformar datos para mantener compatibilidad
