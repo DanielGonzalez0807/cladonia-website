@@ -40,12 +40,12 @@ export default function Map({ data }) {
                             <div className="flex space-x-1">
                                 <div className="w-4 h-8 bg-green-500 rounded"></div>
                                 <div className="w-4 h-8 bg-yellow-500 rounded"></div>
-                                <div className="w-4 h-8 bg-orange-500 rounded"></div>
+                                <div className="w-4 h-8 bg-yellow-500 rounded"></div>
                                 <div className="w-4 h-8 bg-gray-300 rounded"></div>
                                 <div className="w-4 h-8 bg-gray-300 rounded"></div>
                             </div>
                         </div>
-                        <p className="text-2xl font-bold text-orange-600">{data.map.difficulty}</p>
+                        <p className="text-2xl font-bold text-yellow-600">{data.map.difficulty}</p>
                         <p className="text-sm text-gray-600">Senderos irregulares</p>
                     </div>
 

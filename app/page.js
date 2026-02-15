@@ -6,13 +6,14 @@ import Events from "@/app/_components/sections/Events";
 import About from "@/app/_components/sections/About";
 import Contact from "@/app/_components/sections/Contact";
 import BridgeReserve from "@/app/_components/ui/BridgeReserve";
+import News from "./_components/sections/News";
 
 export default function Home() {
   return (
       <main>
           <Header />
           <Hero />
-          <Bridge text="Conoce lo que hacemos" />
+          <News />
           <Events />
           <Bridge text="Vive experiencias únicas" />
           <Experiencies />
