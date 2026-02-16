@@ -554,6 +554,7 @@ export default function Form() {
                       })}
                       className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     />
+                    {errors.seniors && <p className="text-red-400 text-xs mt-1">{errors.seniors.message}</p>}
                     <ul className="mt-3 text-xs text-gray-300 space-y-1">
                       <li>• Mayores de 60 años</li>
                       <li>• Entrada gratuita</li>
@@ -566,9 +567,10 @@ export default function Form() {
                     <label htmlFor="children" className="block text-sm font-bold mb-2">Estudiantes</label>
                     <input 
                       type="number" 
-                      {...register("children", { min: 0 })}
+                      {...register("children", { min: { value: 0, message: "No puede ser negativo" }, valueAsNumber: true })}
                       className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     />
+                    {errors.children && <p className="text-red-400 text-xs mt-1">{errors.children.message}</p>}
                     <ul className="mt-3 text-xs text-gray-300 space-y-1">
                       <li>• 5 a 25 años</li>
                       <li>• Tarifa reducida</li>
@@ -581,9 +583,10 @@ export default function Form() {
                     <label htmlFor="adults" className="block text-sm font-bold mb-2">Adultos</label>
                     <input 
                       type="number" 
-                      {...register("adults", { min: 1 })}
+                      {...register("adults", { min: { value: 0, message: "No puede ser negativo" }, valueAsNumber: true })}
                       className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     />
+                    {errors.adults && <p className="text-red-400 text-xs mt-1">{errors.adults.message}</p>}
                     <ul className="mt-3 text-xs text-gray-300 space-y-1">
                       <li>• 26 a 59 años</li>
                       <li>• Tarifa general</li>
@@ -602,6 +605,7 @@ export default function Form() {
                       })}
                       className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     />
+                    {errors.foreigners && <p className="text-red-400 text-xs mt-1">{errors.foreigners.message}</p>}
                     <ul className="mt-3 text-xs text-gray-300 space-y-1">
                       <li>• No residentes</li>
                       <li>• Tarifa especial</li>
