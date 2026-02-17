@@ -4,6 +4,7 @@ import Image from "next/image";
 import { trails } from "@/data/trails";
 import { topPlanDates } from "@/data/topPlanDates";
 import { useMemo } from "react";
+import { formatDateColombian } from "@/lib/dateUtils";
 
 function getNextDate(dates) {
   const today = new Date();
@@ -49,11 +50,11 @@ export default function News() {
                   {trail.name}
                 </h3>
                 <p className="text-yellow-200 text-xs mb-2">
-                  Fechas: {trail.allDates.map(d=> new Date(d.date).toLocaleDateString('es-CO',{day:'numeric',month:'short'})).join(', ')}
+                  Fechas: {trail.allDates.map(d=> formatDateColombian(d.date, {day:'numeric',month:'short'})).join(', ')}
                 </p>
                 {trail.nextDate ? (
                   <p className="text-white text-lg font-semibold">
-                    Próx. fecha: {new Date(trail.nextDate.date).toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    Próx. fecha: {formatDateColombian(trail.nextDate.date, { day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
                 ) : (
                   <p className="text-white text-lg font-semibold">Sin fechas disponibles</p>

@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { formatDateColombian } from '@/lib/dateUtils';
 
 export default function TopPlan({ 
   plans, 
@@ -66,7 +67,7 @@ export default function TopPlan({
         <div className="text-right bg-gray-700/50 border border-gray-600 px-3 py-2 rounded">
           <p className="text-yellow-400 font-bold text-xs mb-1">Fecha seleccionada</p>
           <p className="text-white font-bold text-base">
-            {selectedTopDate ? new Date(selectedTopDate).toLocaleDateString('es-CO') : 'No seleccionada'}
+            {selectedTopDate ? formatDateColombian(selectedTopDate) : 'No seleccionada'}
           </p>
         </div>
       </div>
@@ -101,7 +102,7 @@ export default function TopPlan({
                 }`}
               >
                 <p className="text-yellow-400 font-bold text-sm text-center">
-                  {new Date(dateInfo.date).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
+                  {formatDateColombian(dateInfo.date, { day: '2-digit', month: 'short' })}
                 </p>
                 <p className="text-white font-bold text-lg text-center">
                   {dateInfo.disponibles}/{dateInfo.cupos}
