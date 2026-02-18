@@ -385,14 +385,6 @@ export default function Form() {
       
       {/* Sección del Formulario */}
       <section className="relative w-full min-h-screen overflow-hidden">
-        <Image 
-          src="/images/exp_1.png" 
-          alt="Background" 
-          fill
-          className="object-cover object-center" 
-          priority
-        />
-        
         <div className="absolute inset-0 bg-black/60"></div>
         
         <div className="relative z-10 min-h-screen flex flex-col justify-center text-white py-8">
