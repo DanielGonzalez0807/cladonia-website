@@ -1,9 +1,25 @@
 export const dynamicOptions = {
-  transport: {
-    label: "Transporte",
+  transport: [
+  {
+    id: "standard",
+    label: "Para 3 pasajeros",
     price: 50000,
-    description: "Transporte ida y vuelta al parque"
+    description: "Transporte ida y vuelta en bus compartido"
   },
+  {
+    id: "private",
+    label: "Para 10 pasajeros",
+    price: 120000,
+    description: "Vehículo privado ida y vuelta"
+  },
+  {
+    id: "luxury",
+    label: "Para 15 pasajeros",
+    price: 200000,
+    description: "Camioneta 4x4 con conductor exclusivo"
+  }
+],
+
   meals: [
     {
       id: "breakfast",

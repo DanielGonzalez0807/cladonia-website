@@ -13,11 +13,14 @@ export default function Hero() {
         src="/video/hero-video.mp4"
       />
 
-      {/* Sin overlay */}
+      {/* Con overlay */}
+      
+      
 
 
       {/* CONTENIDO */}
       <div className="relative z-10 h-full flex items-end justify-center">
+        <div className="absolute bg-linear-b from-black/50 to-black/80 w-full h-full" />
         <div className="text-center max-w-7xl mx-auto px-6 pb-10 text-white">
           <h1 className="text-4xl md:text-6xl font-bold leading-tight text-white drop-shadow-lg">
             Explora reservas naturales

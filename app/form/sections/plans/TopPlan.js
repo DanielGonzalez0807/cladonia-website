@@ -10,7 +10,6 @@ export default function TopPlan({
   topPlanDates, 
   selectedTopDate, 
   setSelectedTopDate, 
-  currentPrices, 
   calculation, 
   formatPrice, 
   watch 
@@ -143,7 +142,8 @@ export default function TopPlan({
       {/* Precio por persona */}
       <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5 text-center">
         <p className="text-yellow-400 font-bold text-sm mb-2">Precio por persona (Todo incluido)</p>
-        <p className="text-white font-bold text-3xl">{formatPrice(currentPrices.top)}</p>
+        <p className="text-white font-bold text-3xl">{formatPrice(plans.top.prices[selectedActivity])}</p>
+
         <p className="text-white-400 text-xs mt-1">Mismo precio para todos los visitantes</p>
       </div>
 

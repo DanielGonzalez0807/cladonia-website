@@ -24,6 +24,7 @@ const EXPERIENCE_MAP = {
   'fotografia': 'fotografico'
 };
 
+TopPlan
 export default function Form() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -82,66 +83,105 @@ export default function Form() {
     }
   }, [searchParams, events]);
 
-  const currentPrices = useMemo(() => {
-    if (!selectedActivity) return null;
-    return {
-      basic: plans.basic.prices[selectedActivity],
-      top: plans.top.prices[selectedActivity],
-      dynamic: plans.dynamic.prices[selectedActivity]
-    };
-  }, [selectedActivity]);
-
   const calculation = useMemo(() => {
-    if (!selectedPlan || !currentPrices) return null;
-    
+    if (!selectedPlan || !selectedActivity) return null;
+
     const childrenCount = parseInt(children) || 0;
     const adultsCount = parseInt(adults) || 0;
     const seniorsCount = parseInt(seniors) || 0;
     const foreignersCount = parseInt(foreigners) || 0;
-    
-    const totalPersons = childrenCount + adultsCount + seniorsCount + foreignersCount;
+
+    const totalPersons =
+      childrenCount +
+      adultsCount +
+      seniorsCount +
+      foreignersCount;
+
     if (totalPersons === 0) return null;
-    
+
     let total = 0;
-    
-    if (selectedPlan === 'basic' && selectedActivity) {
-      // Plan Básico: tarifas diferenciadas
+
+    // ==============================
+    // PLAN BÁSICO
+    // ==============================
+    if (selectedPlan === "basic") {
       const rates = plans.basic.rates[selectedActivity];
-      if (rates) {
-        total = (childrenCount * rates.children) + 
-                (adultsCount * rates.adults) + 
-                (seniorsCount * rates.seniors) + 
-                (foreignersCount * rates.foreigners);
-      }
-    } else if (selectedPlan === 'dynamic') {
-      // Plan Dinámico: precio base + opciones adicionales
-      const basePrice = currentPrices[selectedPlan];
-      total = basePrice * totalPersons;
-      
-      // Agregar transporte
-      if (dynamicOptions.includeTransport) {
+
+      if (!rates) return null;
+
+      total =
+        childrenCount * rates.children +
+        adultsCount * rates.adults +
+        seniorsCount * rates.seniors +
+        foreignersCount * rates.foreigners;
+    }
+
+    // ==============================
+    // PLAN DINÁMICO
+    // ==============================
+    else if (selectedPlan === "dynamic") {
+      const rates = plans.basic.rates[selectedActivity];
+
+      if (!rates) return null;
+
+      // 1️⃣ Base igual al plan básico
+      total =
+        childrenCount * rates.children +
+        adultsCount * rates.adults +
+        seniorsCount * rates.seniors +
+        foreignersCount * rates.foreigners;
+
+      // 2️⃣ Transporte (por persona)
+      if (dynamicOptions?.includeTransport) {
         total += 50000 * totalPersons;
       }
-      
-      // Agregar comidas
-      const mealPrices = { breakfast: 15000, snack: 8000, lunch: 25000 };
-      dynamicOptions.selectedMeals.forEach(mealId => {
-        total += mealPrices[mealId] * totalPersons;
+
+      // 3️⃣ Comidas (por persona)
+      const mealPrices = {
+        breakfast: 15000,
+        snack: 8000,
+        lunch: 25000,
+      };
+
+      dynamicOptions?.selectedMeals?.forEach((mealId) => {
+        if (mealPrices[mealId]) {
+          total += mealPrices[mealId] * totalPersons;
+        }
       });
-      
-      // Agregar guía especializado
-      if (dynamicOptions.selectedGuide) {
-        const guidePrices = { photography: 100000, biology: 120000, bilingual: 150000 };
-        total += guidePrices[dynamicOptions.selectedGuide];
+
+      // 4️⃣ Guía especializado (precio fijo por grupo)
+      const guidePrices = {
+        photography: 100000,
+        biology: 120000,
+        bilingual: 150000,
+      };
+
+      if (dynamicOptions?.selectedGuide) {
+        total += guidePrices[dynamicOptions.selectedGuide] || 0;
       }
-    } else {
-      // Plan Top: precio único por persona
-      const basePrice = currentPrices[selectedPlan];
-      total = basePrice * totalPersons;
     }
-    
+
+    // ==============================
+    // PLAN TOP
+    // ==============================
+    else if (selectedPlan === "top") {
+      const pricePerPerson =
+        plans.top.prices[selectedActivity] || 0;
+
+      total = pricePerPerson * totalPersons;
+    }
+
     return { totalPersons, total };
-  }, [selectedPlan, currentPrices, children, adults, seniors, foreigners, selectedActivity, dynamicOptions]);
+  }, [
+    selectedPlan,
+    selectedActivity,
+    children,
+    adults,
+    seniors,
+    foreigners,
+    dynamicOptions
+  ]);
+
   
   const formatPrice = (price) => {
     return new Intl.NumberFormat('es-CO', {
@@ -270,8 +310,7 @@ export default function Form() {
         }
 
         planDetails = {
-          precioBase: currentPrices[selectedPlan] * totalPersons,
-          opcionesSeleccionadas
+          precioBase: calculation?.total || 0,
         };
       }
 
@@ -662,9 +701,11 @@ export default function Form() {
                           <h4 className="text-xl font-bold text-yellow-400 mb-2">{plan.name}</h4>
                           <p className="text-white text-sm">{plan.subtitle}</p>
                         </div>
-                        {currentPrices && (
+                        {selectedActivity && plan.id === "top" && (
                           <div className="text-center mb-6">
-                            <div className="text-3xl font-bold text-white">${(plan.prices[selectedActivity] / 1000).toFixed(0)}K</div>
+                            <div className="text-3xl font-bold text-white">
+                              ${(plans.top.prices[selectedActivity] / 1000).toFixed(0)}K
+                            </div>
                             <div className="text-gray-300 text-sm">por persona</div>
                           </div>
                         )}
@@ -683,7 +724,7 @@ export default function Form() {
                   ))}
                 </div>
 
-                {selectedPlan && currentPrices && (
+                {selectedPlan && (
                   <>
                     {selectedPlan === 'basic' && (
                       <BasicPlan
@@ -710,7 +751,6 @@ export default function Form() {
                         topPlanDates={topPlanDates}
                         selectedTopDate={selectedTopDate}
                         setSelectedTopDate={setSelectedTopDate}
-                        currentPrices={currentPrices}
                         calculation={calculation}
                         formatPrice={formatPrice}
                         watch={watch}
@@ -727,7 +767,6 @@ export default function Form() {
                         adults={adults}
                         seniors={seniors}
                         foreigners={foreigners}
-                        currentPrices={currentPrices}
                         formatPrice={formatPrice}
                         watch={watch}
                         onOptionsChange={setDynamicOptions}

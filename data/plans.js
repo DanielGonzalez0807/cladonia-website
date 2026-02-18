@@ -16,9 +16,9 @@ export const plans = {
       sendero_5: { children: 40000, adults: 58000, seniors: 0, foreigners: 75000 },
       sendero_6: { children: 28000, adults: 42000, seniors: 0, foreigners: 55000 },
       sendero_7: { children: 45000, adults: 65000, seniors: 0, foreigners: 85000 }
-    },
-    prices: {}
+    }
   },
+
   top: {
     id: 'top',
     name: 'Plan Top',
@@ -39,25 +39,17 @@ export const plans = {
       sendero_7: 95000
     }
   },
+
   dynamic: {
     id: 'dynamic',
     name: 'Plan Dinámico',
-    subtitle: 'Adaptado a tus necesidades',
+    subtitle: 'Personaliza tu experiencia',
     badge: null,
     features: [
-      'Todo del plan top',
-      'Fotografía profesional',
-      'Itinerario personalizado',
-      'Guía bilingüe disponible'
-    ],
-    prices: {
-      sendero_1: 110000,
-      sendero_2: 120000,
-      sendero_3: 130000,
-      sendero_4: 115000,
-      sendero_5: 135000,
-      sendero_6: 105000,
-      sendero_7: 145000
-    }
+      'Base igual al plan básico',
+      'Transporte opcional',
+      'Alimentación opcional',
+      'Tipo de guía seleccionable'
+    ]
   }
 };
