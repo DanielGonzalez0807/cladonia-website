@@ -1,7 +1,7 @@
 export const trails = [
   {
     id: 1,
-    name: "Lagunas de Siecha",
+    name: "Sendero Lagunas de Siecha",
     image: "/images/img_1.png",
     distance: "10 km",
     difficulty: "Moderado",
