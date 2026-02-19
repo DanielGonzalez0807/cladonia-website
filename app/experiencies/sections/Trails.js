@@ -32,6 +32,7 @@ export default function Trails() {
                                         <FontAwesomeIcon icon={faRoute} style={{width: '20px', height: '20px'}} className="mb-2 text-green-600" />
                                         <p className="text-xs font-bold text-gray-900 mb-1">Distancia</p>
                                         <p className="text-sm font-bold text-green-600">{trail.distance}</p>
+                                        <p className="mt-1 text-xs font-bold text-gray-400">{trail.time}</p>
                                     </div>
                                 </div>
 
@@ -39,16 +40,15 @@ export default function Trails() {
                                     <div className="flex flex-col items-center">
                                         <FontAwesomeIcon icon={faPersonHiking} style={{width: '20px', height: '20px'}} className="mb-2 text-orange-600" />
                                         <p className="text-xs font-bold text-gray-900 mb-1">Dificultad</p>
-                                        <p className="text-sm font-bold text-orange-600">{trail.difficulty}</p>
+                                        <p className="text-sm font-bold ${trail.difficultyColor}">{trail.difficulty}</p>
                                     </div>
                                 </div>
 
                                 <div className="bg-white rounded-lg p-3 shadow-lg flex-1">
                                     <div className="flex flex-col items-center">
                                         <FontAwesomeIcon icon={faMountain} style={{width: '20px', height: '20px'}} className="mb-2 text-blue-600" />
-                                        <p className="text-xs font-bold text-gray-900 mb-1">Altura</p>
+                                        <p className="text-xs font-bold text-gray-900 mb-1">Altitud Max.</p>
                                         <p className="text-sm font-bold text-blue-600">{trail.elevation}</p>
-                                        <p className="text-xs text-gray-500 mt-1">Incl. {trail.incline}</p>
                                     </div>
                                 </div>
                             </div>
