@@ -141,6 +141,11 @@ export default function DynamicPlan({
     totalGuideCost
   ]);
 
+    const formatThousandsK = (value) => {
+  if (!value) return "0K";
+  return `${Math.round(value / 1000)}K`;
+};
+
   return (
     <div className="mt-6 p-6 bg-gray-800/60 border-2 border-yellow-400 rounded-xl">
 
@@ -287,7 +292,7 @@ export default function DynamicPlan({
 
           <div className="flex flex-col items-end">
             <span className="text-white font-bold text-2xl">
-              {formatPrice(totalGuideCost)}
+              {formatThousandsK(totalGuideCost)}
             </span>
 
             {guidesRequired > 1 && (
@@ -418,7 +423,7 @@ export default function DynamicPlan({
               );
               return transport ? (
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-300">
+                  <span className="text-white">
                     🚐 {transport.label}
                   </span>
                   <span className="text-yellow-400 font-bold">
@@ -436,7 +441,7 @@ export default function DynamicPlan({
                   key={mealId}
                   className="flex justify-between items-center text-sm"
                 >
-                  <span className="text-gray-300">
+                  <span className="text-white">
                     🍽️ {meal.label} x{totalVisitors}
                   </span>
                   <span className="text-yellow-400 font-bold">
@@ -453,7 +458,7 @@ export default function DynamicPlan({
               );
               return guide ? (
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-300">
+                  <span className="text-white">
                 👨‍🏫 {guide.label} x{guidesRequired}
                   </span>
                   <span className="text-yellow-400 font-bold">
@@ -473,7 +478,7 @@ export default function DynamicPlan({
         <div className="bg-yellow-400/20 border-2 border-yellow-400 rounded p-4">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-gray-300 font-semibold">
+              <p className="text-white font-semibold">
                 Total Plan Dinámico
               </p>
               <p className="text-white text-sm">
