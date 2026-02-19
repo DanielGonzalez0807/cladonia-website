@@ -30,13 +30,13 @@ export const plans = {
       'Transporte incluido'
     ],
     prices: {
-      sendero_1: 74900,
-      sendero_2: 80000,
-      sendero_3: 85000,
-      sendero_4: 78000,
-      sendero_5: 88000,
-      sendero_6: 70000,
-      sendero_7: 95000
+      sendero_1: 199000,
+      sendero_2: 199000,
+      sendero_3: 199000,
+      sendero_4: 199000,
+      sendero_5: 199000,
+      sendero_6: 199000,
+      sendero_7: 199000
     }
   },
 

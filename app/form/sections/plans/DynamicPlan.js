@@ -1,6 +1,7 @@
 'use client';
 import { useState, useMemo, useEffect } from 'react';
 import { dynamicOptions } from '@/data/dynamicOptions';
+import { guideRates } from '@/data/guideRates';
 
 export default function DynamicPlan({ 
   plans, 
@@ -11,7 +12,7 @@ export default function DynamicPlan({
   adults, 
   seniors, 
   foreigners, 
-  formatPrice, 
+  formatPrice,
   watch,
   onOptionsChange
 }) {
@@ -22,7 +23,6 @@ export default function DynamicPlan({
   const [selectedMeals, setSelectedMeals] = useState([]);
   const [selectedGuide, setSelectedGuide] = useState(null);
 
-  // Notificar cambios al componente padre
   useEffect(() => {
     if (onOptionsChange) {
       onOptionsChange({
@@ -39,74 +39,107 @@ export default function DynamicPlan({
     );
   };
 
-  const childrenParsed = parseInt(childrenCount) || 0;
-  const adultsParsed = parseInt(adults) || 0;
-  const seniorsParsed = parseInt(seniors) || 0;
-  const foreignersParsed = parseInt(foreigners) || 0;
-  
-  const totalPersons =
-  childrenParsed +
-  adultsParsed +
-  seniorsParsed +
-  foreignersParsed;
+  const childrenCountNum = parseInt(childrenCount) || 0;
+  const adultsCount = parseInt(adults) || 0;
+  const seniorsCount = parseInt(seniors) || 0;
+  const foreignersCount = parseInt(foreigners) || 0;
 
-    const dynamicTotal = useMemo(() => {
-      if (!selectedActivity) return 0;
-      if (totalPersons === 0) return 0;
+  const totalVisitors =
+    childrenCountNum +
+    adultsCount +
+    seniorsCount +
+    foreignersCount;
 
-      const rates = plans.basic.rates[selectedActivity];
-      if (!rates) return 0;
+  const insurancePerPerson = 10000;
 
-      let total =
-      (childrenParsed * rates.children) +
-      (adultsParsed * rates.adults) +
-      (seniorsParsed * rates.seniors) +
-      (foreignersParsed * rates.foreigners);
+  // ===============================
+  // 🧭 GUÍA BÁSICO AUTOMÁTICO
+  // ===============================
+  const guideRate = selectedActivity? (guideRates[selectedActivity] || 0) : 0;
 
+  const guidesRequired =
+    totalVisitors > 0 ? Math.ceil(totalVisitors / 10) : 0;
 
-      // Transporte
-      if (selectedTransport) {
-        const transport = dynamicOptions.transport.find(
-          t => t.id === selectedTransport
-        );
-        if (transport) {
-          total += transport.price * totalPersons;
-        }
+  const totalGuideCost =
+    guidesRequired * guideRate;
+
+  const exemptEntry = seniorsCount * parkEntryRates.exempt;
+  const studentEntry = childrenCountNum * parkEntryRates.student;
+  const adultEntry = adultsCount * parkEntryRates.adult;
+  const foreignerEntry = foreignersCount * parkEntryRates.foreigner;
+
+  const exemptInsurance = seniorsCount * insurancePerPerson;
+  const studentInsurance = childrenCountNum * insurancePerPerson;
+  const adultInsurance = adultsCount * insurancePerPerson;
+  const foreignerInsurance = foreignersCount * insurancePerPerson;
+
+  const dynamicTotal = useMemo(() => {
+    if (totalVisitors === 0) return 0;
+
+    let total = 0;
+
+    const totalEntry =
+      exemptEntry +
+      studentEntry +
+      adultEntry +
+      foreignerEntry;
+
+    const totalInsurance =
+      exemptInsurance +
+      studentInsurance +
+      adultInsurance +
+      foreignerInsurance;
+
+    total += totalEntry + totalInsurance;
+
+    // ✅ Guía básico automático SIEMPRE se suma
+    total += totalGuideCost;
+
+    // Transporte
+    if (selectedTransport) {
+      const transport = dynamicOptions.transport.find(
+        t => t.id === selectedTransport
+      );
+      if (transport) {
+        total += transport.price * totalVisitors;
       }
+    }
 
-      // Comidas
-      selectedMeals.forEach(mealId => {
-        const meal = dynamicOptions.meals.find(m => m.id === mealId);
-        if (meal) {
-          total += meal.price * totalPersons;
-        }
-      });
+    // Comidas
+    selectedMeals.forEach(mealId => {
+      const meal = dynamicOptions.meals.find(m => m.id === mealId);
+      if (meal) {
+        total += meal.price * totalVisitors;
+      }
+    });
 
-
-      // Guía
-      if (selectedGuide) {
-        const guide = dynamicOptions.guides.find(g => g.id === selectedGuide);
-        if (guide) {
+    // Guía especializado (precio fijo adicional)
+    if (selectedGuide) {
+      const guide = dynamicOptions.guides.find(
+        g => g.id === selectedGuide
+      );
+      if (guide) {
         total += guide.price;
-        }
       }
+    }
 
+    return total;
 
-      return total;
-
-    }, [
-        selectedActivity,
-        childrenParsed,
-        adultsParsed,
-        seniorsParsed,
-        foreignersParsed,
-        selectedTransport,
-        selectedMeals,
-        selectedGuide,
-        plans,
-        totalPersons
-      ]
-    );
+  }, [
+    totalVisitors,
+    exemptEntry,
+    studentEntry,
+    adultEntry,
+    foreignerEntry,
+    exemptInsurance,
+    studentInsurance,
+    adultInsurance,
+    foreignerInsurance,
+    selectedTransport,
+    selectedMeals,
+    selectedGuide,
+    totalGuideCost
+  ]);
 
   return (
     <div className="mt-6 p-6 bg-gray-800/60 border-2 border-yellow-400 rounded-xl">
@@ -194,25 +227,69 @@ export default function DynamicPlan({
         </div>
       </div>
 
-
-      {/* Base incluido */}
-      <div className="bg-green-500/10 border border-green-500 p-5 rounded mb-5">
-        <p className="text-green-400 text-xl font-bold mb-3 text-center">
-          ✅ INCLUIDO EN EL PLAN BASE
-        </p>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
-            <p className="text-green-400 font-bold text-sm">✅ Entrada</p>
-          </div>
-          <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
-            <p className="text-green-400 font-bold text-sm">✅ Seguro</p>
-          </div>
-          <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
-            <p className="text-green-400 font-bold text-sm">✅ Guía Básico</p>
+      {/* Desglose por visitante */}
+      {totalVisitors > 0 && (
+        <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5">
+          <p className="text-white font-semibold mb-3 text-center">Desglose por tipo de visitante</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {seniorsCount > 0 && (
+              <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
+                <p className="text-yellow-400 font-bold text-sm mb-1">Exentos x{seniorsCount}</p>
+                <p className="text-white font-bold text-xl mb-1">${exemptEntry.toLocaleString()}</p>
+                <p className="text-white font-semibold text-xs">+ Póliza ${exemptInsurance.toLocaleString()}</p>
+              </div>
+            )}
+            {childrenCountNum > 0 && (
+              <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
+                <p className="text-yellow-400 font-bold text-sm mb-1">Estudiantes x{childrenCountNum}</p>
+                <p className="text-white font-bold text-xl mb-1">${studentEntry.toLocaleString()}</p>
+                <p className="text-white font-semibold text-xs">+ Póliza ${studentInsurance.toLocaleString()}</p>
+              </div>
+            )}
+            {adultsCount > 0 && (
+              <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
+                <p className="text-yellow-400 font-bold text-sm mb-1">Adultos x{adultsCount}</p>
+                <p className="text-white font-bold text-xl mb-1">${adultEntry.toLocaleString()}</p>
+                <p className="text-white font-semibold text-xs">+ Póliza ${adultInsurance.toLocaleString()}</p>
+              </div>
+            )}
+            {foreignersCount > 0 && (
+              <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
+                <p className="text-yellow-400 font-bold text-sm mb-1">Extranjeros x{foreignersCount}</p>
+                <p className="text-white font-bold text-xl mb-1">${foreignerEntry.toLocaleString()}</p>
+                <p className="text-white font-semibold text-xs">+ Póliza ${foreignerInsurance.toLocaleString()}</p>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      )}
 
+      {totalVisitors > 0 && (
+        <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5 flex flex-row justify-between items-center">
+          <div>
+            <span className="text-yellow-400 font-bold text-lg block mb-1">
+              Guía Básico
+            </span>
+            <p className="text-white text-sm font-bold">
+              1 x cada 10 visitantes
+            </p>
+          </div>
+
+          <div className="flex flex-col items-end">
+            <span className="text-white font-bold text-2xl">
+              {formatPrice(totalGuideCost)}
+            </span>
+
+            {guidesRequired > 1 && (
+              <p className="text-yellow-400 text-sm mt-1 font-bold">
+                {guidesRequired} guías requeridos
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      
       {/* Personaliza tu experiencia */}
       <div className="bg-blue-500/10 border border-blue-400 p-5 rounded mb-5">
         <p className="text-blue-400 text-xl font-bold mb-4 text-center">
@@ -333,10 +410,10 @@ export default function DynamicPlan({
               return transport ? (
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-300">
-                    🚐 {transport.label} x{totalPersons}
+                    🚐 {transport.label} x{totalVisitors}
                   </span>
                   <span className="text-yellow-400 font-bold">
-                    {formatPrice(transport.price * totalPersons)}
+                    {formatPrice(transport.price * totalVisitors)}
                   </span>
                 </div>
               ) : null;
@@ -351,10 +428,10 @@ export default function DynamicPlan({
                   className="flex justify-between items-center text-sm"
                 >
                   <span className="text-gray-300">
-                    🍽️ {meal.label} x{totalPersons}
+                    🍽️ {meal.label} x{totalVisitors}
                   </span>
                   <span className="text-yellow-400 font-bold">
-                    {formatPrice(meal.price * totalPersons)}
+                    {formatPrice(meal.price * totalVisitors)}
                   </span>
                 </div>
               ) : null;
@@ -368,11 +445,12 @@ export default function DynamicPlan({
               return guide ? (
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-300">
-                    👨‍🏫 {guide.label}
+                👨‍🏫 {guide.label} x{guidesRequired}
                   </span>
                   <span className="text-yellow-400 font-bold">
-                    {formatPrice(guide.price)}
+                    {formatPrice(totalGuideCost)}
                   </span>
+
                 </div>
               ) : null;
             })()}
@@ -381,8 +459,8 @@ export default function DynamicPlan({
         </div>
       )}
 
-      {/* Total */}
-      {totalPersons > 0 && (
+      {/* TOTAL FINAL */}
+      {totalVisitors > 0 && (
         <div className="bg-yellow-400/20 border-2 border-yellow-400 rounded p-4">
           <div className="flex justify-between items-center">
             <div>
@@ -390,7 +468,7 @@ export default function DynamicPlan({
                 Total Plan Dinámico
               </p>
               <p className="text-gray-400 text-sm">
-                {totalPersons} visitante{totalPersons !== 1 ? 's' : ''}
+                {totalVisitors} visitante{totalVisitors !== 1 ? 's' : ''}
               </p>
             </div>
             <p className="text-yellow-400 font-bold text-4xl">

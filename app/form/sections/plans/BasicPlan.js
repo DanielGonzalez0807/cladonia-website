@@ -34,8 +34,21 @@ export default function BasicPlan({
   
   const totalEntry = exemptEntry + studentEntry + adultEntry + foreignerEntry;
   const totalInsurance = totalVisitors * insurancePerPerson;
-  const totalVehicles = (vehicleCounts.car * 15000) + (vehicleCounts.minibus * 25000) + (vehicleCounts.bus * 40000);
-  const totalBasic = totalEntry + totalInsurance + guideRate + totalVehicles;
+  const totalVehicles = (vehicleCounts.car * 21000) + (vehicleCounts.minibus * 54000) + (vehicleCounts.bus * 113000);
+
+  const guidesRequired = totalVisitors > 0
+  ? Math.ceil(totalVisitors / 10)
+  : 0;
+
+  const totalGuideCost = guidesRequired * guideRate;
+
+  const totalBasic = totalEntry + totalInsurance + totalGuideCost + totalVehicles;
+
+  const formatThousandsK = (value) => {
+  if (!value) return "0K";
+  return `${Math.round(value / 1000)}K`;
+};
+
 
   return (
     <div className="mt-6 p-6 bg-gray-800/60 border-2 border-yellow-400 rounded-xl">
@@ -58,14 +71,14 @@ export default function BasicPlan({
           <span className="text-white font-semibold text-sm">PNN CHINGAZA</span>
         </div>
         <div className="bg-gray-700/50 border border-gray-600 p-2 rounded text-center">
-          <span className="text-gray-400 text-xs block mb-1">Sendero</span>
+          <span className="text-gray-400 text-xs block mb-1">Actividad</span>
           <span className="text-white font-semibold text-sm">{activities['PNN CHINGAZA'].find(a => a.value === selectedActivity)?.label}</span>
         </div>
       </div>
       
       {/* Tarifas de entrada */}
       <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5">
-        <p className="text-white font-semibold mb-3">Tarifas de entrada al parque</p>
+        <p className="text-white font-semibold mb-3 text-center">Tarifas de entrada al parque</p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
             <p className="text-yellow-400 font-bold text-xs mb-1">Exento</p>
@@ -87,48 +100,63 @@ export default function BasicPlan({
       </div>
       
       {/* Póliza y Guía */}
-      <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5 flex justify-between items-center">
+      <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5 flex flex-row justify-between items-center">
         <div>
           <span className="text-yellow-400 font-bold text-sm block mb-1">Póliza x persona</span>
+        </div>
+        <div>
           <span className="text-white font-bold text-2xl">$10K</span>
         </div>
-        <div className="text-right">
-          <span className="text-yellow-400 font-bold text-sm block mb-1">Guía</span>
-          <span className="text-white font-bold text-2xl">${(guideRate / 1000).toFixed(0)}K</span>
+      </div>
+      <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5 flex flex-row justify-between items-center">
+        <div>
+          <span className="text-yellow-400 font-bold text-lg block mb-1">Guía</span>
+          <p className="text-white text-sm font-bold">1 x cada 10 visitantes</p>
         </div>
+      <div className="flex flex-col items-end">
+        <span className="text-white font-bold text-2xl">
+          {formatThousandsK(totalGuideCost)}
+        </span>
+        {guidesRequired > 1 && (
+          <p className="text-yellow-400 text-m mt-1 font-bold">
+            {guidesRequired} guías requeridos
+          </p>
+        )}
+      </div>
+
       </div>
       
       {/* Desglose por visitante */}
       {totalVisitors > 0 && (
         <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5">
-          <p className="text-white font-semibold mb-3">Desglose por tipo de visitante</p>
+          <p className="text-white font-semibold mb-3 text-center">Desglose por tipo de visitante</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {seniorsCount > 0 && (
               <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
                 <p className="text-yellow-400 font-bold text-sm mb-1">Exentos x{seniorsCount}</p>
                 <p className="text-white font-bold text-xl mb-1">${exemptEntry.toLocaleString()}</p>
-                <p className="text-gray-300 font-semibold text-xs">+ Póliza ${exemptInsurance.toLocaleString()}</p>
+                <p className="text-white font-semibold text-xs">+ Póliza ${exemptInsurance.toLocaleString()}</p>
               </div>
             )}
             {childrenCountNum > 0 && (
               <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
                 <p className="text-yellow-400 font-bold text-sm mb-1">Estudiantes x{childrenCountNum}</p>
                 <p className="text-white font-bold text-xl mb-1">${studentEntry.toLocaleString()}</p>
-                <p className="text-gray-300 font-semibold text-xs">+ Póliza ${studentInsurance.toLocaleString()}</p>
+                <p className="text-white font-semibold text-xs">+ Póliza ${studentInsurance.toLocaleString()}</p>
               </div>
             )}
             {adultsCount > 0 && (
               <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
                 <p className="text-yellow-400 font-bold text-sm mb-1">Adultos x{adultsCount}</p>
                 <p className="text-white font-bold text-xl mb-1">${adultEntry.toLocaleString()}</p>
-                <p className="text-gray-300 font-semibold text-xs">+ Póliza ${adultInsurance.toLocaleString()}</p>
+                <p className="text-white font-semibold text-xs">+ Póliza ${adultInsurance.toLocaleString()}</p>
               </div>
             )}
             {foreignersCount > 0 && (
               <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
                 <p className="text-yellow-400 font-bold text-sm mb-1">Extranjeros x{foreignersCount}</p>
                 <p className="text-white font-bold text-xl mb-1">${foreignerEntry.toLocaleString()}</p>
-                <p className="text-gray-300 font-semibold text-xs">+ Póliza ${foreignerInsurance.toLocaleString()}</p>
+                <p className="text-white font-semibold text-xs">+ Póliza ${foreignerInsurance.toLocaleString()}</p>
               </div>
             )}
           </div>
@@ -138,12 +166,12 @@ export default function BasicPlan({
       {/* Transporte NO incluido */}
       <div className="bg-red-500/10 border border-red-500 p-4 rounded mb-5 text-center">
         <p className="text-red-400 text-lg font-bold mb-1">⚠️ Este plan NO incluye transporte</p>
-        <p className="text-gray-300 text-sm">Debes gestionar tu propio transporte al parque</p>
+        <p className="text-yellow-400 text-sm">Debes gestionar tu propio transporte al parque</p>
       </div>
       
       {/* Derecho de ingreso vehículo */}
       <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5">
-        <p className="text-white font-semibold mb-3">Derecho de ingreso vehículo</p>
+        <p className="text-white font-semibold mb-3 text-center">Derecho de ingreso por vehículo</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
             <p className="text-yellow-400 font-bold text-sm mb-2">Automóvil</p>
@@ -154,8 +182,8 @@ export default function BasicPlan({
               onChange={(e) => setVehicleCounts({...vehicleCounts, car: parseInt(e.target.value) || 0})}
               className="w-12 mx-auto mb-2 px-1 py-1 rounded bg-white text-black text-center text-sm border border-gray-400 focus:outline-none focus:ring-1 focus:ring-yellow-400"
             />
-            <p className="text-white font-bold text-lg">$15K</p>
-            {vehicleCounts.car > 0 && <p className="text-yellow-400 font-semibold text-xs mt-1">Total: ${(vehicleCounts.car * 15000).toLocaleString()}</p>}
+            <p className="text-white font-bold text-lg">$21K</p>
+            {vehicleCounts.car > 0 && <p className="text-yellow-400 font-semibold text-xs mt-1">Total: ${(vehicleCounts.car * 21000).toLocaleString()}</p>}
           </div>
           <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
             <p className="text-yellow-400 font-bold text-sm mb-2">Microbus</p>
@@ -166,8 +194,8 @@ export default function BasicPlan({
               onChange={(e) => setVehicleCounts({...vehicleCounts, minibus: parseInt(e.target.value) || 0})}
               className="w-12 mx-auto mb-2 px-1 py-1 rounded bg-white text-black text-center text-sm border border-gray-400 focus:outline-none focus:ring-1 focus:ring-yellow-400"
             />
-            <p className="text-white font-bold text-lg">$25K</p>
-            {vehicleCounts.minibus > 0 && <p className="text-yellow-400 font-semibold text-xs mt-1">Total: ${(vehicleCounts.minibus * 25000).toLocaleString()}</p>}
+            <p className="text-white font-bold text-lg">$54K</p>
+            {vehicleCounts.minibus > 0 && <p className="text-yellow-400 font-semibold text-xs mt-1">Total: ${(vehicleCounts.minibus * 54000).toLocaleString()}</p>}
           </div>
           <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
             <p className="text-yellow-400 font-bold text-sm mb-2">Bus</p>
@@ -178,8 +206,8 @@ export default function BasicPlan({
               onChange={(e) => setVehicleCounts({...vehicleCounts, bus: parseInt(e.target.value) || 0})}
               className="w-12 mx-auto mb-2 px-1 py-1 rounded bg-white text-black text-center text-sm border border-gray-400 focus:outline-none focus:ring-1 focus:ring-yellow-400"
             />
-            <p className="text-white font-bold text-lg">$40K</p>
-            {vehicleCounts.bus > 0 && <p className="text-yellow-400 font-semibold text-xs mt-1">Total: ${(vehicleCounts.bus * 40000).toLocaleString()}</p>}
+            <p className="text-white font-bold text-lg">$113K</p>
+            {vehicleCounts.bus > 0 && <p className="text-yellow-400 font-semibold text-xs mt-1">Total: ${(vehicleCounts.bus * 113000).toLocaleString()}</p>}
           </div>
         </div>
       </div>
@@ -188,8 +216,9 @@ export default function BasicPlan({
       <div className="bg-yellow-400/20 border-2 border-yellow-400 rounded p-4">
         <div className="flex justify-between items-center">
           <div>
-            <p className="text-gray-300 font-semibold">Total Plan Básico</p>
-            <p className="text-gray-400 text-sm">{totalVisitors} visitante{totalVisitors !== 1 ? 's' : ''}</p>
+            <p className="text-white font-semibold">Total Plan Básico</p>
+            <p className="text-yellow-400 text-xs">IVA incluido</p>
+            <p className="text-white text-m">{totalVisitors} visitante{totalVisitors !== 1 ? 's' : ''}</p>
           </div>
           <p className="text-yellow-400 font-bold text-4xl">{formatPrice(totalBasic)}</p>
         </div>
