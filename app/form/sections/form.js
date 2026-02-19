@@ -332,14 +332,14 @@ export default function Form() {
         telefono: data.tel,
         destino: selectedDestination,
         sendero: senderoNombre,
-        plan: selectedPlan,
-        planNombre: plans[selectedPlan].name,
+        plan: plans[selectedPlan].name, // Enviar el nombre del plan, no el ID
         fecha: formData.date,
         total: formData.totalPrice,
         estudiantes: parseInt(data.children) || 0,
         adultos: parseInt(data.adults) || 0,
         exentos: parseInt(data.seniors) || 0,
         extranjeros: parseInt(data.foreigners) || 0,
+        descripcion: data.description || '', // Agregar descripción
         planDetails: {}
       };
 

@@ -52,7 +52,7 @@ export async function POST(request) {
     const { data, error } = await resend.emails.send({
       from: process.env.EMAIL_FROM,
       to: email,
-      subject: '✅ Confirmación de Reserva - ALMONTE by Cladonia S.A.S',
+      subject: '✅ Pre-reserva exitosa - ALMONTE by Cladonia S.A.S',
       html: generateClientEmail(emailData)
     });
 
