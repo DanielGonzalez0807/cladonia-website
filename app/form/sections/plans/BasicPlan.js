@@ -82,7 +82,7 @@ export default function BasicPlan({
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
             <p className="text-yellow-400 font-bold text-xs mb-1">Exento</p>
-            <p className="text-white font-bold text-lg">Gratis</p>
+            <p className="text-green-500 font-bold text-lg">Gratis</p>
           </div>
           <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
             <p className="text-yellow-400 font-bold text-xs mb-1">Estudiantes</p>

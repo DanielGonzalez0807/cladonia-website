@@ -101,7 +101,7 @@ export default function DynamicPlan({
         t => t.id === selectedTransport
       );
       if (transport) {
-        total += transport.price * totalVisitors;
+        total += transport.price;
       }
     }
 
@@ -167,13 +167,13 @@ export default function DynamicPlan({
       {/* Destino y Sendero */}
       <div className="grid grid-cols-2 gap-4 mb-5">
         <div className="bg-gray-700/50 border border-gray-600 p-2 rounded text-center">
-          <span className="text-gray-400 text-xs block mb-1">Destino</span>
+          <span className="text-white text-xs block mb-1">Destino</span>
           <span className="text-white font-semibold text-sm">
             PNN CHINGAZA
           </span>
         </div>
         <div className="bg-gray-700/50 border border-gray-600 p-2 rounded text-center">
-          <span className="text-gray-400 text-xs block mb-1">Sendero</span>
+          <span className="text-white text-xs block mb-1">Sendero</span>
           <span className="text-white font-semibold text-sm">
             {activities['PNN CHINGAZA'].find(a => a.value === selectedActivity)?.label}
           </span>
@@ -192,7 +192,7 @@ export default function DynamicPlan({
             <p className="text-yellow-400 font-bold text-xs mb-1">
               Exento
             </p>
-            <p className="text-white font-bold text-lg">
+            <p className="text-green-500 font-bold text-lg">
               Gratis
             </p>
           </div>
@@ -224,6 +224,15 @@ export default function DynamicPlan({
             </p>
           </div>
 
+        </div>
+      </div>
+
+      <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5 flex flex-row justify-between items-center">
+        <div>
+          <span className="text-yellow-400 font-bold text-sm block mb-1">Póliza x persona</span>
+        </div>
+        <div>
+          <span className="text-white font-bold text-2xl">$10K</span>
         </div>
       </div>
 
@@ -264,6 +273,7 @@ export default function DynamicPlan({
         </div>
       )}
 
+
       {totalVisitors > 0 && (
         <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5 flex flex-row justify-between items-center">
           <div>
@@ -292,8 +302,7 @@ export default function DynamicPlan({
       
       {/* Personaliza tu experiencia */}
       <div className="bg-blue-500/10 border border-blue-400 p-5 rounded mb-5">
-        <p className="text-blue-400 text-xl font-bold mb-4 text-center">
-          🎯 Personaliza tu Experiencia
+        <p className="text-white text-xl font-bold mb-4 text-center">Personaliza tu Experiencia
         </p>
 
         {/* Transporte */}
@@ -325,7 +334,7 @@ export default function DynamicPlan({
                 <p className="text-yellow-400 font-bold text-base">
                   {formatPrice(transport.price)}
                 </p>
-                <p className="text-gray-400 text-xs">por persona</p>
+                <p className="text-white text-xs">por grupo</p>
               </div>
             ))}
           </div>
@@ -354,7 +363,7 @@ export default function DynamicPlan({
                 <p className="text-yellow-400 font-bold text-base">
                   {formatPrice(meal.price)}
                 </p>
-                <p className="text-gray-400 text-xs">por persona</p>
+                <p className="text-white text-xs">por persona</p>
               </div>
             ))}
           </div>
@@ -387,7 +396,7 @@ export default function DynamicPlan({
                 <p className="text-yellow-400 font-bold text-base">
                   {formatPrice(guide.price)}
                 </p>
-                <p className="text-gray-400 text-xs">precio fijo</p>
+                <p className="text-white text-xs">precio fijo</p>
               </div>
             ))}
           </div>
@@ -410,10 +419,10 @@ export default function DynamicPlan({
               return transport ? (
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-300">
-                    🚐 {transport.label} x{totalVisitors}
+                    🚐 {transport.label}
                   </span>
                   <span className="text-yellow-400 font-bold">
-                    {formatPrice(transport.price * totalVisitors)}
+                    {formatPrice(transport.price)}
                   </span>
                 </div>
               ) : null;
@@ -467,7 +476,7 @@ export default function DynamicPlan({
               <p className="text-gray-300 font-semibold">
                 Total Plan Dinámico
               </p>
-              <p className="text-gray-400 text-sm">
+              <p className="text-white text-sm">
                 {totalVisitors} visitante{totalVisitors !== 1 ? 's' : ''}
               </p>
             </div>
