@@ -7,6 +7,7 @@ import About from "@/app/_components/sections/About";
 import Contact from "@/app/_components/sections/Contact";
 import BridgeReserve from "@/app/_components/ui/BridgeReserve";
 import News from "./_components/sections/News";
+import AboutService from "./_components/sections/AboutService";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
           <Experiencies />
           <Bridge text="Descubre quienes somos" />
           <About />
+          <AboutService />
           <Bridge text="Contacta con nosotros" />
           <Contact />
           <BridgeReserve text="Comienza tu próxima aventura" />

@@ -7,8 +7,8 @@ export default function Experiencies() {
                 <h2 className="text-2xl md:text-4xl font-bold text-gray-900 text-center mb-8 md:mb-12">Experiencias</h2>
                 <div className="flex justify-center">
                     <Card 
-                        title="Parque Natural Nacional Chingaza"
-                        description="Descubre páramos únicos, lagunas y frailejones centenarios. Camina por senderos que conectan ecosistemas de alta montaña."
+                        title="PNN CHINGAZA"
+                        description="El páramo de Chingaza nos brinda espacios de bienestar, donde el protagonista es el paisaje natural."
                         image="/images/img_1.png"
                         slug="chingaza"
                     />

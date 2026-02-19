@@ -15,23 +15,23 @@ export default function Card({ title, description, image, slug = "chingaza" }) {
             />
             
             {/* Contenido superpuesto sobre la imagen */}
-            <div className="absolute inset-0 p-4 md:p-6 flex flex-col items-center justify-end">
-                <div className="text-center text-white">
-                    {/* Título de la experiencia */}
-                    <h3 className="text-xl md:text-2xl font-bold mb-2">{title}</h3>
-                    
-                    {/* Descripción con enlace para ver más */}
-                    <p className="mb-4 text-sm md:text-base">{description}
-                        <Link href={`/experiencies/${slug}`} className="text-white text-sm md:text-lg font-extrabold ml-1">
-                            ...ver más
-                        </Link>
-                    </p>
-                </div>
+            <Link href={`/experiencies/${slug}`}>
+                <div className="absolute inset-0 p-4 md:p-6 flex flex-col items-center justify-end">
+                    <div className="text-center text-white">
+                        {/* Título de la experiencia */}
+                        <h3 className="text-xl md:text-2xl font-bold mb-2">{title}</h3>
+                        
+                        {/* Descripción con enlace para ver más */}
+                        <p className="mb-4 text-sm md:text-base">{description}
+                            
+                        </p>
+                    </div>
                 
-                <div className="scale-75 md:scale-90 lg:scale-100">
-                    <ReserveButton slug={slug} />
+                    <div className="scale-75 md:scale-90 lg:scale-100">
+                        <ReserveButton slug={slug} />
+                    </div>
                 </div>
-            </div>
+            </Link>    
         </div>
     )
 }
