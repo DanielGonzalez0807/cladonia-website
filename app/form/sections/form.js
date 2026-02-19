@@ -309,8 +309,10 @@ export default function Form() {
           });
         }
 
+        // Guardar opciones seleccionadas en planDetails
         planDetails = {
           precioBase: calculation?.total || 0,
+          opcionesSeleccionadas: opcionesSeleccionadas
         };
       }
 
