@@ -1,12 +1,29 @@
 "use client";
 
 export default function ContactButton() {
+    const handleClick = () => {
+        const subject = encodeURIComponent("Consulta sobre nuestras experiencias");
+        const body = encodeURIComponent(`Hola Cladonia,
+
+Me gustaría obtener más información sobre tus experiencias.
+
+Saludos`);
+
+        const url = `https://mail.google.com/mail/?view=cm&fs=1&to=info@cladonia.org&su=${subject}&body=${body}&tf=1`;
+
+        window.open(
+            url,
+            "GmailCompose",
+            "width=600,height=600,menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes"
+        );
+    };
+
     return (
-        <a
-            href="mailto:info@cladonia.org?subject=Consulta%20sobre%20nuestras%20experiencias&body=Hola%20Cladonia,%0A%0AMe%20gustaría%20obtener%20más%20información%20sobre%20tus%20experiencias.%0A%0nSaludos"
-            className="bg-yellow-400 text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-yellow-500 transition cursor-pointer inline-block"
+        <button
+            onClick={handleClick}
+            className="bg-yellow-400 text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-yellow-500 transition cursor-pointer"
         >
             Contáctanos
-        </a>
+        </button>
     );
 }
