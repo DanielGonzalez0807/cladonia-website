@@ -6,7 +6,7 @@ export const trails = [
     distance: "5.5 km",
     time: "1 dia",
     difficulty: "Moderado",
-    difficultyColor:"text-orange-400",
+    difficultyColor:"text-yellow-500",
     elevation: "3,700m",
     incline: "10%"
   },
@@ -28,7 +28,7 @@ export const trails = [
     distance: "10 km",
     time: "1 dia",
     difficulty: "Muy alta",
-    difficultyColor:"text-red-200",
+    difficultyColor:"text-red-800",
     elevation: "3,400m",
     incline: "25%"
   },
@@ -50,7 +50,7 @@ export const trails = [
     distance: "5.8 km",
     time: "1 dia",
     difficulty: "Moderado",
-    difficultyColor:"text-orange-400",
+    difficultyColor:"text-yellow-500",
     elevation: "3,200m",
     incline: "20%"
   },
@@ -61,7 +61,7 @@ export const trails = [
     distance: "7.5 km",
     time: "1 dia",
     difficulty: "Alta",
-    difficultyColor:"text-orange-800",
+    difficultyColor:"text-orange-600",
     elevation: "3,400m",
     incline: "8%"
   },

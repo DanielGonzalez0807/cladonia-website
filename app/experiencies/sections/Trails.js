@@ -29,26 +29,26 @@ export default function Trails() {
                             <div className="flex gap-2">
                                 <div className="bg-white rounded-lg p-3 shadow-lg flex-1">
                                     <div className="flex flex-col items-center">
-                                        <FontAwesomeIcon icon={faRoute} style={{width: '20px', height: '20px'}} className="mb-2 text-green-600" />
+                                        <FontAwesomeIcon icon={faRoute} style={{width: '20px', height: '20px'}} className="mb-2 text-gray-800" />
                                         <p className="text-xs font-bold text-gray-900 mb-1">Distancia</p>
-                                        <p className="text-sm font-bold text-green-600">{trail.distance}</p>
+                                        <p className="text-sm font-bold text-gray-600">{trail.distance}</p>
                                         <p className="mt-1 text-xs font-bold text-gray-400">{trail.time}</p>
                                     </div>
                                 </div>
 
-                                <div className="bg-white rounded-lg p-3 shadow-lg flex-1">
+                                <div className={`rounded-lg p-3 shadow-lg flex-1 text-sm font-bold ${trail.difficultyColor}`}>
                                     <div className="flex flex-col items-center">
-                                        <FontAwesomeIcon icon={faPersonHiking} style={{width: '20px', height: '20px'}} className="mb-2 text-orange-600" />
+                                        <FontAwesomeIcon icon={faPersonHiking} style={{width: '20px', height: '20px'}} className="mb-2 text-gray-800" />
                                         <p className="text-xs font-bold text-gray-900 mb-1">Dificultad</p>
-                                        <p className="text-sm font-bold ${trail.difficultyColor}">{trail.difficulty}</p>
+                                        <p className={`text-sm font-bold ${trail.difficultyColor}`}>{trail.difficulty}</p>
                                     </div>
                                 </div>
 
                                 <div className="bg-white rounded-lg p-3 shadow-lg flex-1">
                                     <div className="flex flex-col items-center">
-                                        <FontAwesomeIcon icon={faMountain} style={{width: '20px', height: '20px'}} className="mb-2 text-blue-600" />
+                                        <FontAwesomeIcon icon={faMountain} style={{width: '20px', height: '20px'}} className="mb-2 text-gray-800" />
                                         <p className="text-xs font-bold text-gray-900 mb-1">Altitud Max.</p>
-                                        <p className="text-sm font-bold text-blue-600">{trail.elevation}</p>
+                                        <p className="text-sm font-bold text-gray-600">{trail.elevation}</p>
                                     </div>
                                 </div>
                             </div>
