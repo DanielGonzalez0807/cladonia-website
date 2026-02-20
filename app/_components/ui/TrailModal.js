@@ -38,7 +38,7 @@ export default function TrailModal({ isOpen, onClose, trail }) {
           <div className="flex-1 overflow-y-auto px-6 md:px-10 py-8 space-y-10">
 
             {/* Datos técnicos */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-center border-b pb-2">
+            <div className="grid grid-cols-3 md:grid-cols-3 gap-2 text-center border-b pb-2">
 
               <div>
                 <FontAwesomeIcon icon={faRoute} className="text-gray-600 mb-3" />
@@ -111,7 +111,7 @@ export default function TrailModal({ isOpen, onClose, trail }) {
                     {trail.description.images.map((img, index) => (
                       <div
                         key={index}
-                        className="relative min-w-[85%] snap-center rounded-lg overflow-hidden aspect-square"
+                        className="relative min-w-[85%] snap-center rounded-lg overflow-hidden aspect-3/4"
                       >
                         <Image
                           src={img}
@@ -129,7 +129,7 @@ export default function TrailModal({ isOpen, onClose, trail }) {
                     {trail.description.images.map((img, index) => (
                       <div
                         key={index}
-                        className="relative rounded-lg overflow-hidden aspect-square"
+                        className="relative rounded-lg overflow-hidden aspect-3/4"
                       >
                         <Image
                           src={img}
