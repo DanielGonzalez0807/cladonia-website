@@ -25,13 +25,12 @@ export default function Recommendations() {
                 <div className="space-y-6">
                     <div className="bg-white p-6 rounded-lg shadow-lg">
                         <div className="flex items-center mb-4">
-                            <span className="text-2xl mr-3">🧭</span>
                             <h3 className="text-xl font-bold text-gray-900">Requisitos Previos</h3>
                         </div>
                         <ul className="space-y-3 text-gray-800">
                             <li className="flex items-start">
                                 <span className="text-green-600 mr-2 mt-1">✓</span>
-                                <span><strong>Reserva:</strong> Nosotros la gestionamos por ti</span>
+                                <span><strong>Reserva:</strong> Lo gestionamos por tí, sin costo adicional.</span>
                             </li>
                             <li className="flex items-start">
                                 <span className="text-green-600 mr-2 mt-1">✓</span>
@@ -39,18 +38,17 @@ export default function Recommendations() {
                             </li>
                             <li className="flex items-start">
                                 <span className="text-green-600 mr-2 mt-1">✓</span>
-                                <span><strong>Guía certificado:</strong> Incluido y obligatorio</span>
+                                <span><strong>Guía certificado:</strong> Cuentas con nosotros</span>
                             </li>
                             <li className="flex items-start">
                                 <span className="text-green-600 mr-2 mt-1">✓</span>
-                                <span><strong>Charla de inducción:</strong> Antes de ingresar</span>
+                                <span><strong>Inducción audiovisual:</strong> Antes de ingresar</span>
                             </li>
                         </ul>
                     </div>
 
                     <div className="bg-white p-6 rounded-lg shadow-lg">
                         <div className="flex items-center mb-4">
-                            <span className="text-2xl mr-3">🧳</span>
                             <h3 className="text-xl font-bold text-gray-900">Qué Llevar</h3>
                         </div>
                         <ul className="space-y-3 text-gray-800">
@@ -68,7 +66,16 @@ export default function Recommendations() {
                             </li>
                             <li className="flex items-start">
                                 <span className="text-blue-600 mr-2 mt-1">•</span>
-                                <span><strong>Productos biodegradables</strong> únicamente</span>
+                                <span><strong>Ropa y calzado de cambio</strong> recomendado</span>
+                            </li>
+                            <li className="flex items-start">
+                                <span className="text-blue-600 mr-2 mt-1">•</span>
+                                <span><strong>Hidratación</strong> en termo</span>
+                            </li>
+                            <li>
+                                <p>
+
+                                </p>
                             </li>
                         </ul>
                     </div>
@@ -78,10 +85,13 @@ export default function Recommendations() {
                 <div className="space-y-6">
                     <div className="bg-white p-6 rounded-lg shadow-lg">
                         <div className="flex items-center mb-4">
-                            <span className="text-2xl mr-3">🚫</span>
-                            <h3 className="text-xl font-bold text-gray-900">Prohibiciones</h3>
+                            <h3 className="text-xl font-bold text-gray-900">Buen comportamiento ambiental</h3>
                         </div>
                         <ul className="space-y-3 text-gray-800">
+                            <li className="flex items-start">
+                                <span className="text-red-600 mr-2 mt-1">✗</span>
+                                <span><strong>Plásticos desechables</strong></span>
+                            </li>
                             <li className="flex items-start">
                                 <span className="text-red-600 mr-2 mt-1">✗</span>
                                 <span><strong>Plásticos desechables</strong></span>
@@ -111,7 +121,6 @@ export default function Recommendations() {
 
                     <div className="bg-white p-6 rounded-lg shadow-lg">
                         <div className="flex items-center mb-4">
-                            <span className="text-2xl mr-3">⚡</span>
                             <h3 className="text-xl font-bold text-gray-900">Seguridad</h3>
                         </div>
                         <ul className="space-y-3 text-gray-800">

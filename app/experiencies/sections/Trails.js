@@ -3,8 +3,23 @@ import Image from "next/image";
 import { trails } from "@/data/trails";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRoute, faPersonHiking, faMountain } from '@fortawesome/free-solid-svg-icons';
+import { useState } from "react";
+import  TrailModal from "@/app/_components/ui/TrailModal"
+
 
 export default function Trails() {
+    const [selectedTrail, setSelectedTrail] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
+
+    const openModal = (trail) => {
+    setSelectedTrail(trail);
+    setIsOpen(true);
+    };
+
+    const closeModal = () => {
+    setIsOpen(false);
+    setSelectedTrail(null);
+    };
     return (
         <section className="relative w-full py-12 md:py-20 bg-white">  
             <div className="max-w-7xl mx-auto px-4 md:px-6">
@@ -13,7 +28,7 @@ export default function Trails() {
                     {trails.map((trail) => (
                         <div key={trail.id} className="flex flex-col">
                             {/* Imagen del sendero */}
-                            <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg mb-4">
+                            <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg mb-4 cursor-pointer"onClick={() => openModal(trail)}>
                                 <Image 
                                     src={trail.image} 
                                     alt={trail.name}
@@ -56,6 +71,12 @@ export default function Trails() {
                     ))}
                 </div>
             </div>
+            <TrailModal
+            isOpen={isOpen}
+            onClose={closeModal}
+            trail={selectedTrail}
+            />
+
         </section>                          
     )
 }
