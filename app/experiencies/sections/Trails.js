@@ -23,7 +23,7 @@ export default function Trails() {
     return (
         <section className="relative w-full py-12 md:py-20 bg-white">  
             <div className="max-w-7xl mx-auto px-4 md:px-6">
-                <h2 className="text-2xl md:text-4xl font-bold text-gray-900 text-center mb-8 md:mb-12">Senderos</h2>
+                <h2 className="text-2xl md:text-4xl font-bold text-gray-900 text-center mb-8 md:mb-12">ACTIVIDADES</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {trails.map((trail) => (
                         <div key={trail.id} className="flex flex-col">

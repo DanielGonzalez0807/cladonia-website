@@ -4,7 +4,7 @@ import ReserveButton from "./ReserveButton";
 
 export default function Header() {
     return (
-        <header className="sticky top-0 left-0 w-full z-50">
+        <header className="fixed top-0 left-0 w-full z-50">
             <nav className="relative mx-auto max-w-au px-4 md:px-6 py-3 md:py-4 flex items-center justify-between bg-black/20 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)]">
             
             {/* Logo clickeable que redirige al inicio */}

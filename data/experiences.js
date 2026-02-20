@@ -13,17 +13,14 @@ export const experiences = {
     about: [
       {
         image: "/images/exp_1.png",
-        title: "CHINGAZA",
         description: "Hogar de 531 especies de aves y más de 1,400 especies de plantas. Desde frailejones centenarios hasta el majestuoso oso andino, cada paso revela la riqueza biológica de los Andes."
       },
       {
         image: "/images/img_1.png",
-        title: "CHINGAZA",
         description: "Explora 40 lagos de origen glaciar en un rango altitudinal de 800 a 4,000 metros. Las lagunas de Siecha y los humedales altoandinos te conectan con la historia geológica de Colombia."
       },
       {
         image: "/images/img_3.png",
-        title: "CHINGAZA",
         description: "Reconocido internacionalmente como Sitio Ramsar y Área de Importancia para la Conservación de las Aves. Un ecosistema vital que regula el ciclo del agua para millones de colombianos."
       }
     ],

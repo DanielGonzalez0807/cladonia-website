@@ -22,13 +22,12 @@ export default function About({ data }) {
               <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-6">
                 <Image
                   src={item.image}
-                  alt={item.title}
+                  alt="{item.title}"
                   fill
                   className="object-cover"
                 />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{item.title}</h3>
                 <p className="text-base leading-relaxed text-gray-700">
                   {item.description}
                 </p>
@@ -40,7 +39,7 @@ export default function About({ data }) {
                 <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg">
                   <Image
                     src={item.image}
-                    alt={item.title}
+                    alt="{item.title}"
                     fill
                     className="object-cover"
                   />

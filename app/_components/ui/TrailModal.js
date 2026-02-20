@@ -3,6 +3,7 @@ import { Dialog } from "@headlessui/react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRoute, faPersonHiking, faMountain } from "@fortawesome/free-solid-svg-icons";
+import ReserveButton from "./ReserveButton";
 
 export default function TrailModal({ isOpen, onClose, trail }) {
   if (!trail) return null;
@@ -98,37 +99,68 @@ export default function TrailModal({ isOpen, onClose, trail }) {
                   </div>
                 )}
 
-                {trail.description.images && (
-                  <div className="space-y-4">
-                    <h3 className="font-semibold text-lg text-gray-900">Galería</h3>
+              {/* Galería */}
+              {trail.description?.images && (
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg text-gray-900">
+                    Galería
+                  </h3>
 
-                    <div className="grid grid-cols-3 md:grid-cols-3 gap-4">
-                      {trail.description.images.map((img, index) => (
-                        <div key={index} className="relative h-32 rounded-lg overflow-hidden">
-                          <Image
-                            src={img}
-                            alt={`${trail.name} ${index + 1}`}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                      ))}
-                    </div>
+                  {/* 📱 Carrusel SOLO móvil */}
+                  <div className="flex md:hidden overflow-x-auto snap-x snap-mandatory gap-4 pb-2 no-scrollbar">
+                    {trail.description.images.map((img, index) => (
+                      <div
+                        key={index}
+                        className="relative min-w-[85%] snap-center rounded-lg overflow-hidden aspect-square"
+                      >
+                        <Image
+                          src={img}
+                          alt={`${trail.name} ${index + 1}`}
+                          fill
+                          sizes="85vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
                   </div>
-                )}
+
+                  {/* 💻 Grid SOLO desktop */}
+                  <div className="hidden md:grid md:grid-cols-3 gap-4">
+                    {trail.description.images.map((img, index) => (
+                      <div
+                        key={index}
+                        className="relative rounded-lg overflow-hidden aspect-square"
+                      >
+                        <Image
+                          src={img}
+                          alt={`${trail.name} ${index + 1}`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               </div>
             )}
 
           </div>
 
           {/* Footer fijo */}
-          <div className="shrink-0 p-2 border-t bg-white flex justify-end">
+          <div className="shrink-0 p-2 border-t bg-white flex justify-between">
+
             <button
               onClick={onClose}
-              className="bg-yellow-400 px-6 py-2 rounded-full font-semibold hover:bg-yellow-500 transition"
+              className="bg-gray-300 px-6 py-2 rounded-full font-semibold hover:bg-gray-400 transition"
             >
               Cerrar
             </button>
+            <div className="scale-90 md:scale-100">
+              <ReserveButton />
+            </div>
           </div>
 
         </Dialog.Panel>

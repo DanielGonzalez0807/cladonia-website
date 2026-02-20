@@ -25,7 +25,6 @@ export default async function ExperiencePage({ params }) {
     <main>
       <ExperienceHero data={serializedExperience} slug={slug} />
       <About data={serializedExperience} />
-      <Activities data={serializedExperience} />
       <Trails />
       <Map data={serializedExperience} />
       <Recommendations />
