@@ -8,23 +8,61 @@ export async function POST(request) {
   try {
     const body = await request.json();
     
-    const { 
-      email, 
-      nombre, 
-      apellido, 
-      destino, 
+    const {
+      email,
+      nombre,
+      apellido,
+      destino,
       sendero,
-      plan, 
+      plan, // could be 'basic' | 'top' | 'dynamic' or human name
       planNombre,
-      fecha, 
-      total, 
+      fecha,
+      total,
       estudiantes,
-      adultos, 
+      adultos,
       exentos,
       extranjeros,
       telefono,
       planDetails
     } = body;
+
+    // Normalize plan name (prefer explicit planNombre, fallback to id)
+    const planName = planNombre || (plan === 'basic' ? 'Plan Básico' : plan === 'top' ? 'Plan Top' : plan === 'dynamic' ? 'Plan Dinámico' : (plan || 'Plan'));
+
+    // Normalize planDetails to support different payload shapes from the form
+    const normalizedPlanDetails = planDetails ? { ...planDetails } : {};
+
+    // Support opcionesSeleccionadas -> opciones and viceversa
+    if (normalizedPlanDetails.opcionesSeleccionadas && !normalizedPlanDetails.opciones) {
+      normalizedPlanDetails.opciones = normalizedPlanDetails.opcionesSeleccionadas.map(op => ({
+        id: op.id || op.nombre || op.name,
+        nombre: op.nombre || op.name || op.id,
+        cantidad: op.cantidad || op.quantity || 1,
+        precioTotal: op.precioTotal || op.totalPrice || op.priceTotal || (op.precioUnitario && op.cantidad ? op.precioUnitario * op.cantidad : 0),
+      }));
+    }
+    if (normalizedPlanDetails.opciones && !normalizedPlanDetails.opcionesSeleccionadas) {
+      normalizedPlanDetails.opcionesSeleccionadas = normalizedPlanDetails.opciones.map(op => ({
+        id: op.id || op.nombre || op.name,
+        nombre: op.nombre || op.name || op.id,
+        cantidad: op.cantidad || op.quantity || 1,
+        precioTotal: op.precioTotal || op.totalPrice || op.priceTotal || (op.precioUnitario && op.cantidad ? op.precioUnitario * op.cantidad : 0),
+      }));
+    }
+
+    // Infer transporte included from flags or options
+    const transporteIncluded = Boolean(
+      normalizedPlanDetails.transporteIncluido ||
+      normalizedPlanDetails.transporteIncluded ||
+      normalizedPlanDetails.includeTransport ||
+      (normalizedPlanDetails.opciones && normalizedPlanDetails.opciones.some(o => (o.id || '').toString().toLowerCase().includes('transport')))
+    );
+    normalizedPlanDetails.transporteIncluido = transporteIncluded;
+
+    // Support vehicleCounts shape for Plan Básico
+    if (normalizedPlanDetails.vehicleCounts && !normalizedPlanDetails.vehiculos) {
+      normalizedPlanDetails.vehiculos = null; // template will format via helper if provided
+    }
 
     const totalVisitantes = (estudiantes || 0) + (adultos || 0) + (exentos || 0) + (extranjeros || 0);
 
@@ -35,7 +73,7 @@ export async function POST(request) {
       telefono,
       destino,
       sendero,
-      plan: planNombre,
+      plan: planName,
       fecha,
       visitantes: {
         exentos: exentos || 0,
@@ -45,7 +83,7 @@ export async function POST(request) {
         total: totalVisitantes
       },
       total,
-      planDetails
+      planDetails: normalizedPlanDetails
     };
 
     // Email al cliente

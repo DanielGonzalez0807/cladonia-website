@@ -9,13 +9,13 @@ export const plans = {
       'Póliza de seguro incluida'
     ],
     rates: {
-      sendero_1: { children: 30000, adults: 45000, seniors: 0, foreigners: 60000 },
-      sendero_2: { children: 35000, adults: 50000, seniors: 0, foreigners: 65000 },
-      sendero_3: { children: 38000, adults: 55000, seniors: 0, foreigners: 70000 },
-      sendero_4: { children: 33000, adults: 48000, seniors: 0, foreigners: 63000 },
-      sendero_5: { children: 40000, adults: 58000, seniors: 0, foreigners: 75000 },
-      sendero_6: { children: 28000, adults: 42000, seniors: 0, foreigners: 55000 },
-      sendero_7: { children: 45000, adults: 65000, seniors: 0, foreigners: 85000 }
+      sendero_1: { children: 24500, adults: 29000, seniors: 0, foreigners: 78500 },
+      sendero_2: { children: 24500, adults: 29000, seniors: 0, foreigners: 78500 },
+      sendero_3: { children: 24500, adults: 29000, seniors: 0, foreigners: 78500 },
+      sendero_4: { children: 24500, adults: 29000, seniors: 0, foreigners: 78500 },
+      sendero_5: { children: 24500, adults: 29000, seniors: 0, foreigners: 78500 },
+      sendero_6: { children: 24500, adults: 29000, seniors: 0, foreigners: 78500 },
+      sendero_7: { children: 24500, adults: 29000, seniors: 0, foreigners: 78500 }
     }
   },
 

@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 import { plans } from "@/data/plans";
 import { activities } from "@/data/activities";
 import { guideRates } from "@/data/guideRates";
+import { vehicleCosts } from "@/data/vehicleCosts";
+import { dynamicOptions as specializedGuidesData } from "@/data/dynamicOptions";
 import { topPlanDates } from "@/data/topPlanDates";
 import TermsModal from "@/app/_components/ui/TermsModal";
 import { supabase } from "@/lib/supabase";
@@ -114,6 +116,18 @@ export default function Form() {
         adultsCount * rates.adults +
         seniorsCount * rates.seniors +
         foreignersCount * rates.foreigners;
+
+      // Add guide cost
+      const guideRate = guideRates[selectedActivity] || 0;
+      total += guideRate;
+
+      // Add insurance per person
+      const insurancePerPerson = 10000;
+      total += (childrenCount + adultsCount + seniorsCount + foreignersCount) * insurancePerPerson;
+
+      // Add vehicle costs
+      const vehicleCost = (vehicleCounts.car * vehicleCosts.car) + (vehicleCounts.minibus * vehicleCosts.minibus) + (vehicleCounts.bus * vehicleCosts.bus);
+      total += vehicleCost;
     }
 
     // ==============================
@@ -131,12 +145,23 @@ export default function Form() {
         seniorsCount * rates.seniors +
         foreignersCount * rates.foreigners;
 
-      // 2️⃣ Transporte (por persona)
-      if (dynamicOptions?.includeTransport) {
-        total += 50000 * totalPersons;
+      // 2️⃣ Póliza de seguro (incluida en dinámico)
+      const insurancePerPerson = 10000;
+      total += (childrenCount + adultsCount + seniorsCount + foreignersCount) * insurancePerPerson;
+
+      // 3️⃣ Guía estándar (incluida en dinámico)
+      const guideRate = guideRates[selectedActivity] || 0;
+      total += guideRate;
+
+      // 4️⃣ Transporte (opcional)
+      if (dynamicOptions?.selectedTransport) {
+        const transportData = specializedGuidesData.transport.find(t => t.id === dynamicOptions.selectedTransport);
+        if (transportData) {
+          total += transportData.price;
+        }
       }
 
-      // 3️⃣ Comidas (por persona)
+      // 5️⃣ Comidas (opcional, por persona)
       const mealPrices = {
         breakfast: 15000,
         snack: 8000,
@@ -149,15 +174,12 @@ export default function Form() {
         }
       });
 
-      // 4️⃣ Guía especializado (precio fijo por grupo)
-      const guidePrices = {
-        photography: 100000,
-        biology: 120000,
-        bilingual: 150000,
-      };
+      // 6️⃣ Guía especializado (opcional, se suma al guía estándar)
+      // Los precios son ADICIONALES al guía estándar
+      const specializedGuidePrice = specializedGuidesData.guides.find(g => g.id === dynamicOptions?.selectedGuide)?.price || 0;
 
       if (dynamicOptions?.selectedGuide) {
-        total += guidePrices[dynamicOptions.selectedGuide] || 0;
+        total += specializedGuidePrice;
       }
     }
 
@@ -179,7 +201,9 @@ export default function Form() {
     adults,
     seniors,
     foreigners,
-    dynamicOptions
+    dynamicOptions,
+    guideRates,
+    vehicleCounts
   ]);
 
   
@@ -254,9 +278,9 @@ export default function Form() {
                              (foreignersCount * parkEntryRates.foreigner);
         
         const costoPolizas = totalVisitors * insurancePerPerson;
-        const costoVehiculos = (vehicleCounts.car * 15000) + 
-                              (vehicleCounts.minibus * 25000) + 
-                              (vehicleCounts.bus * 40000);
+        const costoVehiculos = (vehicleCounts.car * vehicleCosts.car) + 
+                              (vehicleCounts.minibus * vehicleCosts.minibus) + 
+                              (vehicleCounts.bus * vehicleCosts.bus);
 
         planDetails = {
           vehicleCounts,
@@ -277,41 +301,94 @@ export default function Form() {
       else if (selectedPlan === 'dynamic') {
         const opcionesSeleccionadas = [];
         
-        // Agregar transporte si está seleccionado
-        if (dynamicOptions.includeTransport) {
+        // COMPONENTES BASE (incluido siempre)
+        const childrenCount = parseInt(data.children) || 0;
+        const adultsCount = parseInt(data.adults) || 0;
+        const seniorsCount = parseInt(data.seniors) || 0;
+        const foreignersCount = parseInt(data.foreigners) || 0;
+        const totalVisitors = childrenCount + adultsCount + seniorsCount + foreignersCount;
+
+        // Base: Entradas al parque
+        const parkEntryRates = { exempt: 0, student: 24500, adult: 29000, foreigner: 78500 };
+        const costoEntradas = (seniorsCount * parkEntryRates.exempt) + 
+                             (childrenCount * parkEntryRates.student) + 
+                             (adultsCount * parkEntryRates.adult) + 
+                             (foreignersCount * parkEntryRates.foreigner);
+        opcionesSeleccionadas.push({
+          id: 'entradas_dinamico',
+          nombre: 'Entradas al parque',
+          cantidad: totalVisitors,
+          precioUnitario: costoEntradas / totalVisitors,
+          precioTotal: costoEntradas
+        });
+
+        // Base: Póliza de seguro
+        const costoPolizas = totalVisitors * 10000;
+        opcionesSeleccionadas.push({
+          id: 'poliza_dinamico',
+          nombre: 'Pólizas de seguro',
+          cantidad: totalVisitors,
+          precioUnitario: 10000,
+          precioTotal: costoPolizas
+        });
+
+        // Base: Guía estándar
+        const guideRate = guideRates[selectedActivity] || 0;
+        if (guideRate > 0) {
           opcionesSeleccionadas.push({
-            id: 'transport',
-            cantidad: totalPersons,
-            precioUnitario: 50000,
-            precioTotal: 50000 * totalPersons
+            id: 'guia_dinamico',
+            nombre: 'Guía estándar',
+            cantidad: 1,
+            precioUnitario: guideRate,
+            precioTotal: guideRate
           });
         }
         
-        // Agregar comidas seleccionadas
+        // COMPONENTES OPCIONALES
+        // Transporte
+        if (dynamicOptions.selectedTransport) {
+          const transportData = specializedGuidesData.transport.find(t => t.id === dynamicOptions.selectedTransport);
+          if (transportData) {
+            opcionesSeleccionadas.push({
+              id: 'transport',
+              nombre: `Transporte - ${transportData.label}`,
+              cantidad: 1,
+              precioUnitario: transportData.price,
+              precioTotal: transportData.price
+            });
+          }
+        }
+        
+        // Comidas
         const mealPrices = { breakfast: 15000, snack: 8000, lunch: 25000 };
+        const mealNames = { breakfast: 'Desayuno', snack: 'Refrigerio', lunch: 'Almuerzo' };
         dynamicOptions.selectedMeals.forEach(mealId => {
           opcionesSeleccionadas.push({
             id: mealId,
+            nombre: mealNames[mealId] || mealId,
             cantidad: totalPersons,
             precioUnitario: mealPrices[mealId],
             precioTotal: mealPrices[mealId] * totalPersons
           });
         });
         
-        // Agregar guía especializado
+        // Guía especializado (ADICIONAL al guía estándar)
         if (dynamicOptions.selectedGuide) {
-          const guidePrices = { photography: 100000, biology: 120000, bilingual: 150000 };
+          const specializedGuideData = specializedGuidesData.guides.find(g => g.id === dynamicOptions.selectedGuide);
           opcionesSeleccionadas.push({
             id: dynamicOptions.selectedGuide,
+            nombre: `${specializedGuideData?.label} (Adicional)`,
             cantidad: 1,
-            precioUnitario: guidePrices[dynamicOptions.selectedGuide],
-            precioTotal: guidePrices[dynamicOptions.selectedGuide]
+            precioUnitario: specializedGuideData?.price || 0,
+            precioTotal: specializedGuideData?.price || 0
           });
         }
 
-        // Guardar opciones seleccionadas en planDetails
+        // Guardar todas las opciones (base + opcionales) en planDetails
+        // precioBase es la suma de base incluida para referencia
+        const precioBase = costoEntradas + costoPolizas + guideRate;
         planDetails = {
-          precioBase: calculation?.total || 0,
+          precioBase: precioBase,
           opcionesSeleccionadas: opcionesSeleccionadas
         };
       }
@@ -365,19 +442,9 @@ export default function Form() {
           transporteIncluido: true
         };
       } else if (selectedPlan === 'dynamic') {
-        const opcionesNombres = {
-          transport: 'Transporte',
-          breakfast: 'Desayuno',
-          snack: 'Refrigerio',
-          lunch: 'Almuerzo',
-          photography: 'Guía Experto en Fotografía',
-          biology: 'Guía Experto en Biología',
-          bilingual: 'Guía Bilingüe'
-        };
-        
         const opcionesParaEmail = planDetails.opcionesSeleccionadas && planDetails.opcionesSeleccionadas.length > 0
           ? planDetails.opcionesSeleccionadas.map(op => ({
-              nombre: opcionesNombres[op.id] || op.id,
+              nombre: op.nombre || op.id,  // Usar el nombre completo que ya contiene la información
               cantidad: op.cantidad,
               precioTotal: op.precioTotal
             }))
@@ -385,7 +452,7 @@ export default function Form() {
         
         emailData.planDetails = {
           opciones: opcionesParaEmail,
-          transporteIncluido: dynamicOptions.includeTransport
+          opcionesCompletas: planDetails.opcionesSeleccionadas  // Enviar las opciones completas para referencia
         };
       }
 

@@ -459,12 +459,11 @@ export default function DynamicPlan({
               return guide ? (
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-white">
-                👨‍🏫 {guide.label} x{guidesRequired}
+                    👨‍🏫 {guide.label}
                   </span>
                   <span className="text-yellow-400 font-bold">
-                    {formatPrice(totalGuideCost)}
+                    {formatPrice(guide.price)}
                   </span>
-
                 </div>
               ) : null;
             })()}
