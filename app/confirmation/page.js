@@ -1,10 +1,9 @@
+'use client';
 import { Suspense } from 'react';
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import Header from "@/app/_components/ui/Header";
 import Footer from "@/app/_components/ui/Footer";
-
-export const dynamic = 'force-dynamic';
 
 function ConfirmationContent() {
   const searchParams = useSearchParams();
