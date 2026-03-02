@@ -106,7 +106,7 @@ export async function POST(request) {
     const adminResult = await resend.emails.send({
       from: process.env.EMAIL_FROM,
       to: process.env.EMAIL_FROM,
-      subject: 'Nueva Reserva Recibida',
+      subject: '📧 Nueva Reserva Recibida',
       html: generateAdminEmail(emailData)
     });
 

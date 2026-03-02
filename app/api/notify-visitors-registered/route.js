@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { generateVisitorsConfirmationEmail } from '@/lib/emailTemplates';
+import { generateVisitorsConfirmationEmailWithButton } from '@/lib/emailTemplatesNew';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -23,7 +23,7 @@ export async function POST(request) {
       from: process.env.EMAIL_FROM,
       to: process.env.EMAIL_FROM,
       subject: `📋 Visitantes Registrados - ${reserva.rur}`,
-      html: generateVisitorsConfirmationEmail(emailData)
+      html: generateVisitorsConfirmationEmailWithButton(emailData)
     });
 
     return NextResponse.json({ success: true });
