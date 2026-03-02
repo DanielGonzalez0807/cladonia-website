@@ -94,18 +94,45 @@ export async function GET(request) {
     });
 
     return new Response(`
+      <!DOCTYPE html>
       <html>
-        <body style="font-family: Arial; padding: 40px; text-align: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-          <div style="background: white; padding: 40px; border-radius: 12px; max-width: 600px; margin: 0 auto;">
-            <h1 style="color: #10b981; margin-bottom: 20px;">✅ Reserva Atendida</h1>
-            <p style="font-size: 18px; color: #374151; margin-bottom: 10px;"><strong>RUR:</strong> ${rur}</p>
-            <p style="font-size: 16px; color: #6b7280; margin-bottom: 20px;">Email enviado a: ${reserva.email}</p>
-            <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin-top: 20px;">
-              <p style="color: #374151; margin: 0;"><strong>Link de registro:</strong></p>
-              <p style="color: #059669; word-break: break-all; margin: 10px 0 0 0;">${linkRegistro}</p>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reserva Atendida</title>
+      </head>
+      <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #10b981 0%, #059669 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 60px 40px; border-radius: 16px; max-width: 600px; margin: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;">
+          <div style="width: 80px; height: 80px; background: #10b981; border-radius: 50%; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center;">
+            <svg style="width: 50px; height: 50px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          
+          <h1 style="color: #1f2937; margin: 0 0 15px 0; font-size: 32px; font-weight: 700;">Reserva Atendida</h1>
+          <p style="color: #6b7280; font-size: 16px; margin: 0 0 40px 0; line-height: 1.6;">El estado de la reserva ha sido actualizado exitosamente</p>
+          
+          <div style="background: #f3f4f6; padding: 25px; border-radius: 12px; margin-bottom: 30px;">
+            <div style="margin-bottom: 15px;">
+              <p style="color: #6b7280; font-size: 14px; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px;">Código de Reserva</p>
+              <p style="color: #10b981; font-size: 24px; font-weight: 700; margin: 0; letter-spacing: 1px;">${rur}</p>
+            </div>
+            <div style="border-top: 1px solid #e5e7eb; padding-top: 15px;">
+              <p style="color: #6b7280; font-size: 14px; margin: 0 0 5px 0;">Estado actualizado a:</p>
+              <p style="color: #1f2937; font-size: 18px; font-weight: 600; margin: 0;">Atendida</p>
             </div>
           </div>
-        </body>
+          
+          <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 20px; border-radius: 8px; text-align: left; margin-bottom: 30px;">
+            <p style="color: #1e40af; margin: 0; font-size: 14px; line-height: 1.6;">
+              <strong>✓ Email enviado</strong> al cliente: ${reserva.email}<br>
+              <strong>✓ Link de registro</strong> generado correctamente
+            </p>
+          </div>
+          
+          <p style="color: #9ca3af; font-size: 13px; margin: 0;">ALMONTE by Cladonia S.A.S</p>
+        </div>
+      </body>
       </html>
     `, { headers: { 'Content-Type': 'text/html' } });
   } catch (error) {

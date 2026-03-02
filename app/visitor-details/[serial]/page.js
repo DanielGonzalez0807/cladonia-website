@@ -96,7 +96,7 @@ export default function VisitorDetailsPage() {
       });
 
       toast.success('¡Datos guardados exitosamente!');
-      setTimeout(() => router.push('/confirmation'), 2000);
+      setTimeout(() => router.push(`/visitors-confirmation?rur=${encodeURIComponent(reserva.rur)}`), 2000);
     } catch (error) {
       console.error('Error:', error);
       toast.error('Error al guardar los datos');
