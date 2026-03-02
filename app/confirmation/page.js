@@ -1,10 +1,12 @@
-'use client';
+import { Suspense } from 'react';
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import Header from "@/app/_components/ui/Header";
 import Footer from "@/app/_components/ui/Footer";
 
-export default function ConfirmationPage() {
+export const dynamic = 'force-dynamic';
+
+function ConfirmationContent() {
   const searchParams = useSearchParams();
   const rur = searchParams.get('rur');
 
@@ -78,5 +80,17 @@ export default function ConfirmationPage() {
         </div>
       </main>
     </>
+  );
+}
+
+export default function ConfirmationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <p className="text-white">Cargando...</p>
+      </div>
+    }>
+      <ConfirmationContent />
+    </Suspense>
   );
 }
