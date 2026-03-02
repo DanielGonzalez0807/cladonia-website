@@ -1,0 +1,4 @@
+# Fix Vercel Build
+
+Este archivo fuerza un nuevo deployment en Vercel.
+Commit: Fix confirmation page dynamic rendering
