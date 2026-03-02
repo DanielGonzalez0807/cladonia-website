@@ -19,7 +19,7 @@ export default function DynamicPlan({
 
   const parkEntryRates = { exempt: 0, student: 24500, adult: 29000, foreigner: 78500 };
 
-  const [selectedTransport, setSelectedTransport] = useState(null);
+  const [selectedTransport, setSelectedTransport] = useState({});
   const [selectedMeals, setSelectedMeals] = useState([]);
   const [selectedGuide, setSelectedGuide] = useState(null);
 
@@ -37,6 +37,18 @@ export default function DynamicPlan({
     setSelectedMeals(prev => 
       prev.includes(mealId) ? prev.filter(id => id !== mealId) : [...prev, mealId]
     );
+  };
+
+  const updateTransportQuantity = (transportId, delta) => {
+    setSelectedTransport(prev => {
+      const currentQty = prev[transportId] || 0;
+      const newQty = Math.max(0, currentQty + delta);
+      if (newQty === 0) {
+        const { [transportId]: removed, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [transportId]: newQty };
+    });
   };
 
   const childrenCountNum = parseInt(childrenCount) || 0;
@@ -96,13 +108,13 @@ export default function DynamicPlan({
     total += totalGuideCost;
 
     // Transporte
-    if (selectedTransport) {
-      const transport = dynamicOptions.transport.find(
-        t => t.id === selectedTransport
-      );
-      if (transport) {
-        total += transport.price;
-      }
+    if (selectedTransport && Object.keys(selectedTransport).length > 0) {
+      Object.entries(selectedTransport).forEach(([transportId, quantity]) => {
+        const transport = dynamicOptions.transport.find(t => t.id === transportId);
+        if (transport && quantity > 0) {
+          total += transport.price * quantity;
+        }
+      });
     }
 
     // Comidas
@@ -313,36 +325,85 @@ export default function DynamicPlan({
         {/* Transporte */}
         <div className="mb-4">
           <p className="text-white font-semibold mb-2">
-            Transporte (opcional)
+            Transporte (opcional - puedes seleccionar varios)
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {dynamicOptions.transport.map(transport => (
-              <div
-                key={transport.id}
-                onClick={() =>
-                  setSelectedTransport(
-                    selectedTransport === transport.id
-                      ? null
-                      : transport.id
-                  )
-                }
-                className={`bg-gray-800/60 border-2 p-3 rounded cursor-pointer hover:border-blue-400 transition-colors ${
-                  selectedTransport === transport.id
-                    ? 'border-blue-400'
-                    : 'border-gray-600'
-                }`}
-              >
-                <p className="text-white font-bold text-sm mb-1">
-                  {selectedTransport === transport.id ? '✅' : '⬜'}{' '}
-                  {transport.label}
-                </p>
-                <p className="text-yellow-400 font-bold text-base">
-                  {formatPrice(transport.price)}
-                </p>
-                <p className="text-white text-xs">por grupo</p>
-              </div>
-            ))}
+            {dynamicOptions.transport.map(transport => {
+              const quantity = selectedTransport[transport.id] || 0;
+              return (
+                <div
+                  key={transport.id}
+                  className={`bg-gray-800/60 border-2 p-3 rounded transition-colors ${
+                    quantity > 0 ? 'border-blue-400' : 'border-gray-600'
+                  }`}
+                >
+                  <p className="text-white font-bold text-sm mb-1">
+                    {quantity > 0 ? '✅' : '⬜'} {transport.label}
+                  </p>
+                  <p className="text-yellow-400 font-bold text-base">
+                    {formatPrice(transport.price)}
+                  </p>
+                  <p className="text-white text-xs mb-2">por vehículo</p>
+                  
+                  <div className="flex items-center justify-between mt-2">
+                    <button
+                      type="button"
+                      onClick={() => updateTransportQuantity(transport.id, -1)}
+                      disabled={quantity === 0}
+                      className="bg-gray-700 text-white w-8 h-8 rounded font-bold hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      -
+                    </button>
+                    <span className="text-white font-bold text-xl">{quantity}</span>
+                    <button
+                      type="button"
+                      onClick={() => updateTransportQuantity(transport.id, 1)}
+                      className="bg-gray-700 text-white w-8 h-8 rounded font-bold hover:bg-gray-600"
+                    >
+                      +
+                    </button>
+                  </div>
+                  
+                  {quantity > 0 && (
+                    <p className="text-yellow-400 text-xs mt-2 text-center">
+                      Subtotal: {formatPrice(transport.price * quantity)}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
+          
+          {/* Resumen de capacidad total */}
+          {Object.keys(selectedTransport).length > 0 && (() => {
+            const totalCapacity = Object.entries(selectedTransport).reduce((sum, [transportId, quantity]) => {
+              const transport = dynamicOptions.transport.find(t => t.id === transportId);
+              return sum + (transport?.capacity || 0) * quantity;
+            }, 0);
+            
+            return totalCapacity > 0 ? (
+              <div className="mt-3 bg-blue-500/10 border border-blue-400 p-3 rounded">
+                <div className="flex justify-between items-center">
+                  <span className="text-white font-semibold text-sm">
+                    Capacidad total de transporte:
+                  </span>
+                  <span className="text-blue-400 font-bold text-xl">
+                    {totalCapacity} pasajeros
+                  </span>
+                </div>
+                {totalCapacity < totalVisitors && (
+                  <p className="text-yellow-400 text-xs mt-2">
+                    ⚠️ Tienes {totalVisitors} visitantes, necesitas capacidad para {totalVisitors - totalCapacity} más
+                  </p>
+                )}
+                {totalCapacity >= totalVisitors && totalVisitors > 0 && (
+                  <p className="text-green-400 text-xs mt-2">
+                    ✅ Capacidad suficiente para {totalVisitors} visitantes
+                  </p>
+                )}
+              </div>
+            ) : null;
+          })()}
         </div>
 
         {/* Comidas */}
@@ -409,7 +470,7 @@ export default function DynamicPlan({
       </div>
 
       {/* Resumen extras */}
-      {(selectedTransport || selectedMeals.length > 0 || selectedGuide) && (
+      {(Object.keys(selectedTransport).length > 0 || selectedMeals.length > 0 || selectedGuide) && (
         <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5">
           <p className="text-white font-semibold mb-3">
             Servicios adicionales seleccionados
@@ -417,21 +478,19 @@ export default function DynamicPlan({
           <div className="space-y-2">
 
             {/* Transporte */}
-            {selectedTransport && (() => {
-              const transport = dynamicOptions.transport.find(
-                t => t.id === selectedTransport
-              );
-              return transport ? (
-                <div className="flex justify-between items-center text-sm">
+            {Object.entries(selectedTransport).map(([transportId, quantity]) => {
+              const transport = dynamicOptions.transport.find(t => t.id === transportId);
+              return transport && quantity > 0 ? (
+                <div key={transportId} className="flex justify-between items-center text-sm">
                   <span className="text-white">
-                    🚐 {transport.label}
+                    🚐 {transport.label} x{quantity}
                   </span>
                   <span className="text-yellow-400 font-bold">
-                    {formatPrice(transport.price)}
+                    {formatPrice(transport.price * quantity)}
                   </span>
                 </div>
               ) : null;
-            })()}
+            })}
 
             {/* Meals */}
             {selectedMeals.map(mealId => {

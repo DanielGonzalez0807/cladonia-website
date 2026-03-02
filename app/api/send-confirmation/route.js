@@ -23,7 +23,9 @@ export async function POST(request) {
       exentos,
       extranjeros,
       telefono,
-      planDetails
+      planDetails,
+      rur,
+      descripcion
     } = body;
 
     // Normalize plan name (prefer explicit planNombre, fallback to id)
@@ -83,7 +85,9 @@ export async function POST(request) {
         total: totalVisitantes
       },
       total,
-      planDetails: normalizedPlanDetails
+      planDetails: normalizedPlanDetails,
+      rur: rur || null,
+      descripcion: descripcion || null
     };
 
     // Email al cliente

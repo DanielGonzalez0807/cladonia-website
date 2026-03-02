@@ -4,18 +4,21 @@ export const dynamicOptions = {
     id: "standard",
     label: "Para 3 pasajeros",
     price: 600000,
+    capacity: 3,
     description: "Transporte ida y vuelta en bus compartido"
   },
   {
     id: "private",
     label: "Para 10 pasajeros",
     price: 950000,
+    capacity: 10,
     description: "Vehículo privado ida y vuelta"
   },
   {
     id: "luxury",
     label: "Para 15 pasajeros",
     price: 1200000,
+    capacity: 15,
     description: "Camioneta 4x4 con conductor exclusivo"
   }
 ],

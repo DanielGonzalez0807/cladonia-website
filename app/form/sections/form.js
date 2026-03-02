@@ -61,6 +61,7 @@ export default function Form() {
   const [vehicleCounts, setVehicleCounts] = useState({ car: 0, minibus: 0, bus: 0 });
   const [dynamicOptions, setDynamicOptions] = useState({
     includeTransport: false,
+    selectedTransport: {},
     selectedMeals: [],
     selectedGuide: null
   });
@@ -154,11 +155,13 @@ export default function Form() {
       total += guideRate;
 
       // 4️⃣ Transporte (opcional)
-      if (dynamicOptions?.selectedTransport) {
-        const transportData = specializedGuidesData.transport.find(t => t.id === dynamicOptions.selectedTransport);
-        if (transportData) {
-          total += transportData.price;
-        }
+      if (dynamicOptions?.selectedTransport && Object.keys(dynamicOptions.selectedTransport).length > 0) {
+        Object.entries(dynamicOptions.selectedTransport).forEach(([transportId, quantity]) => {
+          const transportData = specializedGuidesData.transport.find(t => t.id === transportId);
+          if (transportData && quantity > 0) {
+            total += transportData.price * quantity;
+          }
+        });
       }
 
       // 5️⃣ Comidas (opcional, por persona)
@@ -345,17 +348,19 @@ export default function Form() {
         
         // COMPONENTES OPCIONALES
         // Transporte
-        if (dynamicOptions.selectedTransport) {
-          const transportData = specializedGuidesData.transport.find(t => t.id === dynamicOptions.selectedTransport);
-          if (transportData) {
-            opcionesSeleccionadas.push({
-              id: 'transport',
-              nombre: `Transporte - ${transportData.label}`,
-              cantidad: 1,
-              precioUnitario: transportData.price,
-              precioTotal: transportData.price
-            });
-          }
+        if (dynamicOptions.selectedTransport && Object.keys(dynamicOptions.selectedTransport).length > 0) {
+          Object.entries(dynamicOptions.selectedTransport).forEach(([transportId, quantity]) => {
+            const transportData = specializedGuidesData.transport.find(t => t.id === transportId);
+            if (transportData && quantity > 0) {
+              opcionesSeleccionadas.push({
+                id: `transport_${transportId}`,
+                nombre: `Transporte - ${transportData.label}`,
+                cantidad: quantity,
+                precioUnitario: transportData.price,
+                precioTotal: transportData.price * quantity
+              });
+            }
+          });
         }
         
         // Comidas
@@ -400,6 +405,11 @@ export default function Form() {
         throw new Error(result.error);
       }
 
+      // Obtener el RUR generado
+      const rur = result.reserva?.rur || 'N/A';
+      console.log('RUR generado:', rur);
+      console.log('Reserva completa:', result.reserva);
+
       // Preparar datos para el email
       const senderoNombre = activities['PNN CHINGAZA'].find(a => a.value === selectedActivity)?.label || selectedActivity;
       
@@ -418,6 +428,7 @@ export default function Form() {
         exentos: parseInt(data.seniors) || 0,
         extranjeros: parseInt(data.foreigners) || 0,
         descripcion: data.description || '', // Agregar descripción
+        rur: rur, // Agregar RUR
         planDetails: {}
       };
 
@@ -473,7 +484,7 @@ export default function Form() {
 
       toast.success('¡Reserva guardada exitosamente!');
       setTimeout(() => {
-        router.push('/confirmation');
+        router.push(`/confirmation?rur=${encodeURIComponent(rur)}`);
       }, 1500);
     } catch (error) {
       const errorMessage = error?.message || error?.toString() || 'Error desconocido';
