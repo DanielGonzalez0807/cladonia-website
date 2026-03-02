@@ -5,9 +5,9 @@ export default function ExperienceHero({ data, slug }) {
   return (
     <section className="relative h-screen w-screen overflow-hidden">
 
-      {/* IMAGEN */}
+
       <Image
-        src={data.hero.image}
+        src="https://drive.google.com/file/d/13qCEu40RgiMryyvxkO0SkvaAPty6dK3t/view?usp=drive_link"
         alt="Hero background"
         fill
         className="object-cover object-center"

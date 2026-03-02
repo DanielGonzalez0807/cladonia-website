@@ -33,31 +33,29 @@ export default function News() {
         <h2 className="text-2xl md:text-4xl font-bold text-gray-900 text-center mb-16 md:mb-24">
           Próximas salidas disponibles
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-12 max-w-sm md:max-w-none mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-12 max-w-sm md:max-w-none mx-auto ">
           {trailInfo.map((trail) => (
             <div
               key={trail.id}
-              className="relative p-4 md:p-6 rounded-lg aspect-square flex flex-col justify-center shadow-gray-300 shadow-lg overflow-hidden"
+              className="relative p-4 md:p-6 rounded-lg aspect-video flex flex-col justify-center shadow-gray-300 shadow-lg overflow-hidden hover:border-2 border-white/60 transition cursor-pointer"
               style={{
                 backgroundImage: `url(${trail.image})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
             >
-              <div className="absolute inset-0 bg-black/40"></div>
+              <div className="absolute inset-0  bg-black/40"></div>
               <div className="relative z-10 text-center">
-                <h3 className="text-white text-lg md:text-xl font-bold mb-1 md:mb-2">
+                <h3 className="text-white text-lg md:text-xl font-bold mb-1 md:mb-8 mt-2">
                   {trail.name}
                 </h3>
-                <p className="text-yellow-200 text-xs mb-2">
-                  Fechas: {trail.allDates.map(d=> formatDateColombian(d.date, {day:'numeric',month:'short'})).join(', ')}
-                </p>
+                
                 {trail.nextDate ? (
-                  <p className="text-white text-lg font-semibold">
+                  <div className="bg-green-700 rounded-full absolute w-full h-auto "><p className="text-white text-m font-medium text-balance ">
                     Próx. fecha: {formatDateColombian(trail.nextDate.date, { day: 'numeric', month: 'long', year: 'numeric' })}
-                  </p>
+                  </p></div>
                 ) : (
-                  <p className="text-white text-lg font-semibold">Sin fechas disponibles</p>
+                  <p className="text-white text-lg font-bold">Sin fechas disponibles</p>
                 )}
               </div>
             </div>

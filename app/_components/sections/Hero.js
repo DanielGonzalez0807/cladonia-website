@@ -8,9 +8,11 @@ export default function Hero() {
         muted
         loop
         playsInline
-        preload="metadata"
-        className="absolute h-full w-full object-cover object-center"
+        preload="none"
+        poster="/images/exp_1.png"
+        className="absolute h-full w-full object-cover object-center "
         src="/video/hero-video.mp4"
+        aria-label="Video de fondo mostrando naturaleza colombiana"
       />
 
       {/* Con overlay */}

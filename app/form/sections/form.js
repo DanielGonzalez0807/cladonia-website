@@ -202,7 +202,6 @@ export default function Form() {
     seniors,
     foreigners,
     dynamicOptions,
-    guideRates,
     vehicleCounts
   ]);
 

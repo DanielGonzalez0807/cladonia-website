@@ -9,6 +9,12 @@ import BridgeReserve from "@/app/_components/ui/BridgeReserve";
 import News from "./_components/sections/News";
 import AboutService from "./_components/sections/AboutService";
 
+export const metadata = {
+  alternates: {
+    canonical: '/',
+  },
+};
+
 export default function Home() {
   return (
       <main>
