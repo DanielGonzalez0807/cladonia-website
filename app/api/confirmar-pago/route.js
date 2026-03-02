@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { Resend } from 'resend';
-import { generateInvoiceEmail } from '@/lib/emailTemplates';
+import { generatePaymentInstructionsEmail } from '@/lib/emailTemplatesNew';
 import crypto from 'crypto';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -73,22 +73,19 @@ export async function GET(request) {
           <div style="background: white; padding: 60px 40px; border-radius: 16px; max-width: 600px; text-align: center;">
             <h1 style="color: #f59e0b;">⚠️ Estado Incorrecto</h1>
             <p style="color: #6b7280;">La reserva está en estado: <strong>${reserva.estado}</strong></p>
+            <p style="color: #6b7280; font-size: 14px;">Solo se pueden enviar instrucciones de pago a reservas en estado "atendida"</p>
           </div>
         </body>
         </html>
       `, { headers: { 'Content-Type': 'text/html' } });
     }
 
-    // Actualizar estado a confirmada
+    // Actualizar estado a confirmada (datos recibidos, pendiente de pago)
     const { error: updateError } = await supabase
       .from('reservas')
       .update({
         estado: 'confirmada',
-        fecha_confirmada: new Date().toISOString(),
-        pago_verificado: true,
-        monto_pagado: reserva.total_precio,
-        metodo_pago: 'Por confirmar',
-        referencia_pago: 'Pendiente'
+        fecha_confirmada: new Date().toISOString()
       })
       .eq('id', reserva.id);
 
@@ -107,25 +104,21 @@ export async function GET(request) {
       `, { headers: { 'Content-Type': 'text/html' } });
     }
 
-    // Enviar email con factura y documentos (PDFs pendientes)
+    // Enviar email con instrucciones de pago
     const emailData = {
       nombre: reserva.nombre,
       apellido: reserva.apellido,
       rur: reserva.rur,
       total: reserva.total_precio,
-      montoPagado: reserva.total_precio,
-      metodoPago: 'Por confirmar',
-      referenciaPago: 'Pendiente',
-      fecha: reserva.fecha
+      fecha: reserva.fecha,
+      destino: reserva.destino
     };
 
-    // TODO: Adjuntar PDFs cuando estén disponibles
     await resend.emails.send({
       from: process.env.EMAIL_FROM,
       to: reserva.email,
-      subject: `🎉 Reserva Confirmada - ${rur} - Documentos Adjuntos`,
-      html: generateInvoiceEmail(emailData)
-      // attachments: [] // Agregar PDFs aquí cuando estén listos
+      subject: `💳 Instrucciones de Pago - ${rur}`,
+      html: generatePaymentInstructionsEmail(emailData)
     });
 
     return new Response(`
@@ -144,8 +137,8 @@ export async function GET(request) {
             </svg>
           </div>
           
-          <h1 style="color: #1f2937; margin: 0 0 15px 0; font-size: 32px; font-weight: 700;">Pago Confirmado</h1>
-          <p style="color: #6b7280; font-size: 16px; margin: 0 0 40px 0; line-height: 1.6;">La reserva ha sido confirmada exitosamente</p>
+          <h1 style="color: #1f2937; margin: 0 0 15px 0; font-size: 32px; font-weight: 700;">Instrucciones Enviadas</h1>
+          <p style="color: #6b7280; font-size: 16px; margin: 0 0 40px 0; line-height: 1.6;">Las instrucciones de pago han sido enviadas al cliente</p>
           
           <div style="background: #f3f4f6; padding: 25px; border-radius: 12px; margin-bottom: 30px;">
             <div style="margin-bottom: 15px;">
@@ -161,8 +154,8 @@ export async function GET(request) {
           <div style="background: #dcfce7; border-left: 4px solid #10b981; padding: 20px; border-radius: 8px; text-align: left; margin-bottom: 30px;">
             <p style="color: #15803d; margin: 0; font-size: 14px; line-height: 1.6;">
               <strong>✓ Email enviado</strong> al cliente: ${reserva.email}<br>
-              <strong>✓ Factura y documentos</strong> incluidos en el correo<br>
-              <strong>✓ Estado</strong> actualizado a confirmada
+              <strong>✓ Instrucciones de pago</strong> incluidas en el correo<br>
+              <strong>✓ Estado</strong> actualizado a confirmada (pendiente de pago)
             </p>
           </div>
           
