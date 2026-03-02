@@ -60,7 +60,10 @@ export async function POST(request) {
       rur: reserva.rur,
       linkRegistro: linkRegistro,
       total: reserva.total_precio,
-      fecha: reserva.fecha
+      fecha: reserva.fecha,
+      destino: reserva.destino,
+      sendero: reserva.sendero_id,
+      plan: reserva.plan_id
     };
 
     await resend.emails.send({
