@@ -6,9 +6,11 @@ import crypto from 'crypto';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function POST(request) {
+export async function GET(request) {
   try {
-    const { rur, token } = await request.json();
+    const { searchParams } = new URL(request.url);
+    const rur = searchParams.get('rur');
+    const token = searchParams.get('token');
 
     // Validar token
     const expectedToken = crypto
@@ -39,18 +41,36 @@ export async function POST(request) {
     const serial = crypto.randomBytes(16).toString('hex');
     const linkRegistro = `${process.env.NEXT_PUBLIC_BASE_URL}/visitor-details/${serial}`;
 
+    console.log('Intentando actualizar reserva:', {
+      id: reserva.id,
+      serial,
+      estado_actual: reserva.estado
+    });
+
     // Actualizar estado
-    const { error: updateError } = await supabase
+    const { data: updatedData, error: updateError } = await supabase
       .from('reservas')
       .update({
         estado: 'atendida',
         fecha_atendida: new Date().toISOString(),
         link_registro: serial
       })
-      .eq('id', reserva.id);
+      .eq('id', reserva.id)
+      .select();
+
+    console.log('Resultado del update:', { updatedData, updateError });
 
     if (updateError) {
-      return NextResponse.json({ error: updateError.message }, { status: 500 });
+      console.error('Error al actualizar:', updateError);
+      return new Response(`
+        <html>
+          <body style="font-family: Arial; padding: 40px; text-align: center;">
+            <h1 style="color: red;">❌ Error</h1>
+            <p>${updateError.message}</p>
+            <pre>${JSON.stringify(updateError, null, 2)}</pre>
+          </body>
+        </html>
+      `, { headers: { 'Content-Type': 'text/html' } });
     }
 
     // Enviar email
@@ -73,8 +93,29 @@ export async function POST(request) {
       html: generateRegistrationEmail(emailData)
     });
 
-    return NextResponse.json({ success: true, linkRegistro });
+    return new Response(`
+      <html>
+        <body style="font-family: Arial; padding: 40px; text-align: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+          <div style="background: white; padding: 40px; border-radius: 12px; max-width: 600px; margin: 0 auto;">
+            <h1 style="color: #10b981; margin-bottom: 20px;">✅ Reserva Atendida</h1>
+            <p style="font-size: 18px; color: #374151; margin-bottom: 10px;"><strong>RUR:</strong> ${rur}</p>
+            <p style="font-size: 16px; color: #6b7280; margin-bottom: 20px;">Email enviado a: ${reserva.email}</p>
+            <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin-top: 20px;">
+              <p style="color: #374151; margin: 0;"><strong>Link de registro:</strong></p>
+              <p style="color: #059669; word-break: break-all; margin: 10px 0 0 0;">${linkRegistro}</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `, { headers: { 'Content-Type': 'text/html' } });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return new Response(`
+      <html>
+        <body style="font-family: Arial; padding: 40px; text-align: center;">
+          <h1 style="color: red;">❌ Error</h1>
+          <p>${error.message}</p>
+        </body>
+      </html>
+    `, { headers: { 'Content-Type': 'text/html' } });
   }
 }

@@ -38,7 +38,6 @@ export default function VisitorDetailsPage() {
 
         setReserva(data);
         
-        // Inicializar visitantes según cantidades
         const visitantesArray = [];
         for (let i = 0; i < data.exentos; i++) {
           visitantesArray.push({ tipo: 'Exento (60+ años)', index: i });
@@ -87,6 +86,15 @@ export default function VisitorDetailsPage() {
 
       if (error) throw error;
 
+      await fetch('/api/notify-visitors-registered', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reserva,
+          visitantes: visitantesData
+        })
+      });
+
       toast.success('¡Datos guardados exitosamente!');
       setTimeout(() => router.push('/confirmation'), 2000);
     } catch (error) {
@@ -115,12 +123,11 @@ export default function VisitorDetailsPage() {
     <>
       <Header />
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-20 px-4">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           
-          {/* Header */}
           <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-xl p-8 mb-8 text-white">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
-              📋 Recolección de Datos de Visitantes
+              Recolección de Datos de Visitantes
             </h1>
             <p className="text-green-100 mb-2">
               <strong>RUR:</strong> {reserva.rur}
@@ -130,29 +137,25 @@ export default function VisitorDetailsPage() {
             </p>
           </div>
 
-          {/* Instrucciones */}
           <div className="bg-blue-500/10 border border-blue-400 rounded-xl p-6 mb-8">
             <h2 className="text-xl font-bold text-blue-400 mb-3">
-              ⚠️ Información Importante
+              Información Importante
             </h2>
             <p className="text-white text-sm leading-relaxed">
-              Es <strong>obligatorio</strong> completar los datos de todos los visitantes para realizar el registro ante el seguro y la entrada al Parque Nacional Natural. Por favor, completa todos los campos con información precisa.
+              Es <strong>obligatorio</strong> completar los datos de todos los visitantes para realizar el registro ante el seguro y la entrada al Parque Nacional Natural.
             </p>
           </div>
 
-          {/* Formulario */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {visitors.map((visitor, idx) => (
               <div key={idx} className="bg-gray-800/60 border border-gray-700 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-yellow-400 mb-4">
                   Visitante #{idx + 1} - {visitor.tipo}
                 </h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                   <div>
-                    <label className="block text-white text-sm font-medium mb-2">
-                      Nombre *
-                    </label>
+                    <label className="block text-white text-sm font-medium mb-2">Nombre *</label>
                     <input
                       {...register(`nombre_${idx}`, { required: true })}
                       className="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
@@ -160,9 +163,7 @@ export default function VisitorDetailsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-white text-sm font-medium mb-2">
-                      Apellido *
-                    </label>
+                    <label className="block text-white text-sm font-medium mb-2">Apellido *</label>
                     <input
                       {...register(`apellido_${idx}`, { required: true })}
                       className="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
@@ -170,34 +171,18 @@ export default function VisitorDetailsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-white text-sm font-medium mb-2">
-                      ¿Es extranjero? *
-                    </label>
-                    <select
-                      {...register(`extranjero_${idx}`, { required: true })}
-                      className="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    >
-                      <option value="">Seleccionar</option>
-                      <option value="no">No</option>
-                      <option value="si">Sí</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-white text-sm font-medium mb-2">
-                      País *
-                    </label>
+                    <label className="block text-white text-sm font-medium mb-2">Edad *</label>
                     <input
-                      {...register(`pais_${idx}`, { required: true })}
-                      defaultValue="Colombia"
+                      type="number"
+                      {...register(`edad_${idx}`, { required: true, min: 1, max: 120 })}
                       className="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     />
                   </div>
+                </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                   <div>
-                    <label className="block text-white text-sm font-medium mb-2">
-                      Tipo de Documento *
-                    </label>
+                    <label className="block text-white text-sm font-medium mb-2">Tipo de Documento *</label>
                     <select
                       {...register(`tipo_doc_${idx}`, { required: true })}
                       className="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
@@ -211,9 +196,7 @@ export default function VisitorDetailsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-white text-sm font-medium mb-2">
-                      Número de Documento *
-                    </label>
+                    <label className="block text-white text-sm font-medium mb-2">Número de Documento *</label>
                     <input
                       {...register(`num_doc_${idx}`, { required: true })}
                       className="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
@@ -221,14 +204,50 @@ export default function VisitorDetailsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-white text-sm font-medium mb-2">
-                      Edad *
-                    </label>
+                    <label className="block text-white text-sm font-medium mb-2">¿Es extranjero? *</label>
+                    <select
+                      {...register(`extranjero_${idx}`, { required: true })}
+                      className="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    >
+                      <option value="">Seleccionar</option>
+                      <option value="no">No</option>
+                      <option value="si">Sí</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div>
+                    <label className="block text-white text-sm font-medium mb-2">País *</label>
                     <input
-                      type="number"
-                      {...register(`edad_${idx}`, { required: true, min: 1, max: 120 })}
+                      {...register(`pais_${idx}`, { required: true })}
+                      defaultValue="Colombia"
                       className="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     />
+                  </div>
+                </div>
+
+                <div className="space-y-3 pt-4 border-t border-gray-600">
+                  <div className="flex items-start">
+                    <input
+                      type="checkbox"
+                      {...register(`salud_${idx}`, { required: true })}
+                      className="mt-1 h-4 w-4 rounded border-gray-600 bg-gray-700 text-yellow-400 focus:ring-2 focus:ring-yellow-400"
+                    />
+                    <label className="ml-3 text-sm text-gray-300">
+                      Confirmo que me encuentro en óptimas condiciones de salud para realizar actividades de senderismo y ecoturismo de alta exigencia física *
+                    </label>
+                  </div>
+
+                  <div className="flex items-start">
+                    <input
+                      type="checkbox"
+                      {...register(`covid_${idx}`, { required: true })}
+                      className="mt-1 h-4 w-4 rounded border-gray-600 bg-gray-700 text-yellow-400 focus:ring-2 focus:ring-yellow-400"
+                    />
+                    <label className="ml-3 text-sm text-gray-300">
+                      Confirmo haber completado el esquema de vacunación contra COVID-19 o haber recibido tratamiento preventivo según recomendaciones sanitarias vigentes *
+                    </label>
                   </div>
                 </div>
               </div>
