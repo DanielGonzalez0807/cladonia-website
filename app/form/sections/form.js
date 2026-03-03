@@ -19,6 +19,7 @@ import { saveReservation, getFechaProgramadaId } from '@/lib/reservations';
 import BasicPlan from "./plans/BasicPlan";
 import TopPlan from "./plans/TopPlan";
 import DynamicPlan from "./plans/DynamicPlan";
+import QuantityStepper from "../components/QuantityStepper";
 
 const EXPERIENCE_MAP = {
   'chingaza': 'chingaza',
@@ -39,7 +40,7 @@ export default function Form() {
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [selectedTopDate, setSelectedTopDate] = useState("");
 
-  const { register, handleSubmit, control, watch, formState: { errors } } = useForm({
+  const { register, handleSubmit, control, watch, setValue, formState: { errors } } = useForm({
     mode: "onBlur",
     defaultValues: {
       name: "",
@@ -653,75 +654,62 @@ export default function Form() {
               <div>
                 <h3 className="text-lg font-semibold mb-4 text-center">Tipo de Visitante</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {/* Exentos - Primero */}
-                  <div className="bg-gray-800/60 p-4 rounded-lg border border-gray-600">
-                    <label htmlFor="seniors" className="block text-sm font-bold mb-2">Exentos</label>
-                    <input 
-                      type="number" 
-                      {...register("seniors", { 
-                        min: { value: 0, message: "No puede ser negativo" },
-                        valueAsNumber: true
-                      })}
-                      className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    />
-                    {errors.seniors && <p className="text-red-400 text-xs mt-1">{errors.seniors.message}</p>}
-                    <ul className="mt-3 text-xs text-gray-300 space-y-1">
-                      <li>• Mayores de 60 años</li>
-                      <li>• Entrada gratuita</li>
-                      <li>• Presentar documento</li>
-                    </ul>
-                  </div>
-
-                  {/* Estudiantes */}
-                  <div className="bg-gray-800/60 p-4 rounded-lg border border-gray-600">
-                    <label htmlFor="children" className="block text-sm font-bold mb-2">Estudiantes</label>
-                    <input 
-                      type="number" 
-                      {...register("children", { min: { value: 0, message: "No puede ser negativo" }, valueAsNumber: true })}
-                      className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    />
-                    {errors.children && <p className="text-red-400 text-xs mt-1">{errors.children.message}</p>}
-                    <ul className="mt-3 text-xs text-gray-300 space-y-1">
-                      <li>• 5 a 25 años</li>
-                      <li>• Tarifa reducida</li>
-                      <li>• Carné estudiantil</li>
-                    </ul>
-                  </div>
-
-                  {/* Adultos */}
-                  <div className="bg-gray-800/60 p-4 rounded-lg border border-gray-600">
-                    <label htmlFor="adults" className="block text-sm font-bold mb-2">Adultos</label>
-                    <input 
-                      type="number" 
-                      {...register("adults", { min: { value: 0, message: "No puede ser negativo" }, valueAsNumber: true })}
-                      className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    />
-                    {errors.adults && <p className="text-red-400 text-xs mt-1">{errors.adults.message}</p>}
-                    <ul className="mt-3 text-xs text-gray-300 space-y-1">
-                      <li>• 26 a 59 años</li>
-                      <li>• Tarifa general</li>
-                      <li>• Documento de identidad</li>
-                    </ul>
-                  </div>
-
-                  {/* Extranjeros */}
-                  <div className="bg-gray-800/60 p-4 rounded-lg border border-gray-600">
-                    <label htmlFor="foreigners" className="block text-sm font-bold mb-2">Extranjeros</label>
-                    <input 
-                      type="number" 
-                      {...register("foreigners", { 
-                        min: { value: 0, message: "No puede ser negativo" },
-                        valueAsNumber: true
-                      })}
-                      className="w-full px-4 py-2 rounded-md bg-gray-800/40 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    />
-                    {errors.foreigners && <p className="text-red-400 text-xs mt-1">{errors.foreigners.message}</p>}
-                    <ul className="mt-3 text-xs text-gray-300 space-y-1">
-                      <li>• No residentes</li>
-                      <li>• Tarifa especial</li>
-                      <li>• Pasaporte requerido</li>
-                    </ul>
-                  </div>
+                  <QuantityStepper
+                    label="Exentos"
+                    value={watch("seniors") ?? 0}
+                    onIncrement={() => setValue("seniors", (parseInt(watch("seniors"), 10) || 0) + 1, { shouldValidate: true })}
+                    onDecrement={() => setValue("seniors", Math.max(0, (parseInt(watch("seniors"), 10) || 0) - 1), { shouldValidate: true })}
+                    activeBorderColor="border-yellow-400"
+                    hint={
+                      <ul className="text-xs text-gray-300 space-y-1">
+                        <li>• Mayores de 60 años</li>
+                        <li>• Entrada gratuita</li>
+                        <li>• Presentar documento</li>
+                      </ul>
+                    }
+                  />
+                  <QuantityStepper
+                    label="Estudiantes"
+                    value={watch("children") ?? 0}
+                    onIncrement={() => setValue("children", (parseInt(watch("children"), 10) || 0) + 1, { shouldValidate: true })}
+                    onDecrement={() => setValue("children", Math.max(0, (parseInt(watch("children"), 10) || 0) - 1), { shouldValidate: true })}
+                    activeBorderColor="border-yellow-400"
+                    hint={
+                      <ul className="text-xs text-gray-300 space-y-1">
+                        <li>• 5 a 25 años</li>
+                        <li>• Tarifa reducida</li>
+                        <li>• Carné estudiantil</li>
+                      </ul>
+                    }
+                  />
+                  <QuantityStepper
+                    label="Adultos"
+                    value={watch("adults") ?? 0}
+                    onIncrement={() => setValue("adults", (parseInt(watch("adults"), 10) || 0) + 1, { shouldValidate: true })}
+                    onDecrement={() => setValue("adults", Math.max(0, (parseInt(watch("adults"), 10) || 0) - 1), { shouldValidate: true })}
+                    activeBorderColor="border-yellow-400"
+                    hint={
+                      <ul className="text-xs text-gray-300 space-y-1">
+                        <li>• 26 a 59 años</li>
+                        <li>• Tarifa general</li>
+                        <li>• Documento de identidad</li>
+                      </ul>
+                    }
+                  />
+                  <QuantityStepper
+                    label="Extranjeros"
+                    value={watch("foreigners") ?? 0}
+                    onIncrement={() => setValue("foreigners", (parseInt(watch("foreigners"), 10) || 0) + 1, { shouldValidate: true })}
+                    onDecrement={() => setValue("foreigners", Math.max(0, (parseInt(watch("foreigners"), 10) || 0) - 1), { shouldValidate: true })}
+                    activeBorderColor="border-yellow-400"
+                    hint={
+                      <ul className="text-xs text-gray-300 space-y-1">
+                        <li>• No residentes</li>
+                        <li>• Tarifa especial</li>
+                        <li>• Pasaporte requerido</li>
+                      </ul>
+                    }
+                  />
                 </div>
               </div>
 

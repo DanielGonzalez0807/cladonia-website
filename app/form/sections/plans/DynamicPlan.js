@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { dynamicOptions } from '@/data/dynamicOptions';
 import { guideRates } from '@/data/guideRates';
+import QuantityStepper from '../../components/QuantityStepper';
 
 export default function DynamicPlan({ 
   plans, 
@@ -331,45 +332,18 @@ export default function DynamicPlan({
             {dynamicOptions.transport.map(transport => {
               const quantity = selectedTransport[transport.id] || 0;
               return (
-                <div
+                <QuantityStepper
                   key={transport.id}
-                  className={`bg-gray-800/60 border-2 p-3 rounded transition-colors ${
-                    quantity > 0 ? 'border-blue-400' : 'border-gray-600'
-                  }`}
-                >
-                  <p className="text-white font-bold text-sm mb-1">
-                    {quantity > 0 ? '✅' : '⬜'} {transport.label}
-                  </p>
-                  <p className="text-yellow-400 font-bold text-base">
-                    {formatPrice(transport.price)}
-                  </p>
-                  <p className="text-white text-xs mb-2">por vehículo</p>
-                  
-                  <div className="flex items-center justify-between mt-2">
-                    <button
-                      type="button"
-                      onClick={() => updateTransportQuantity(transport.id, -1)}
-                      disabled={quantity === 0}
-                      className="bg-gray-700 text-white w-8 h-8 rounded font-bold hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      -
-                    </button>
-                    <span className="text-white font-bold text-xl">{quantity}</span>
-                    <button
-                      type="button"
-                      onClick={() => updateTransportQuantity(transport.id, 1)}
-                      className="bg-gray-700 text-white w-8 h-8 rounded font-bold hover:bg-gray-600"
-                    >
-                      +
-                    </button>
-                  </div>
-                  
-                  {quantity > 0 && (
-                    <p className="text-yellow-400 text-xs mt-2 text-center">
-                      Subtotal: {formatPrice(transport.price * quantity)}
-                    </p>
-                  )}
-                </div>
+                  label={transport.label}
+                  value={quantity}
+                  onIncrement={() => updateTransportQuantity(transport.id, 1)}
+                  onDecrement={() => updateTransportQuantity(transport.id, -1)}
+                  priceLabel={formatPrice(transport.price)}
+                  priceSubtitle="por vehículo"
+                  detailLine={quantity > 0 ? `Subtotal: ${formatPrice(transport.price * quantity)}` : null}
+                  showCheckmark
+                  activeBorderColor="border-blue-400"
+                />
               );
             })}
           </div>

@@ -1,3 +1,6 @@
+import QuantityStepper from '../../components/QuantityStepper';
+import { vehicleCosts } from '@/data/vehicleCosts';
+
 export default function BasicPlan({ 
   plans, 
   activities, 
@@ -34,7 +37,7 @@ export default function BasicPlan({
   
   const totalEntry = exemptEntry + studentEntry + adultEntry + foreignerEntry;
   const totalInsurance = totalVisitors * insurancePerPerson;
-  const totalVehicles = (vehicleCounts.car * 21000) + (vehicleCounts.minibus * 54000) + (vehicleCounts.bus * 113000);
+  const totalVehicles = (vehicleCounts.car * vehicleCosts.car) + (vehicleCounts.minibus * vehicleCosts.minibus) + (vehicleCounts.bus * vehicleCosts.bus);
 
   const guidesRequired = totalVisitors > 0
   ? Math.ceil(totalVisitors / 10)
@@ -173,42 +176,33 @@ export default function BasicPlan({
       <div className="bg-gray-700/50 border border-gray-600 p-4 rounded mb-5">
         <p className="text-white font-semibold mb-3 text-center">Derecho de ingreso por vehículo</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
-            <p className="text-yellow-400 font-bold text-sm mb-2">Automóvil</p>
-            <input 
-              type="number" 
-              min="0"
-              value={vehicleCounts.car}
-              onChange={(e) => setVehicleCounts({...vehicleCounts, car: parseInt(e.target.value) || 0})}
-              className="w-12 mx-auto mb-2 px-1 py-1 rounded bg-white text-black text-center text-sm border border-gray-400 focus:outline-none focus:ring-1 focus:ring-yellow-400"
-            />
-            <p className="text-white font-bold text-lg">$21K</p>
-            {vehicleCounts.car > 0 && <p className="text-yellow-400 font-semibold text-xs mt-1">Total: ${(vehicleCounts.car * 21000).toLocaleString()}</p>}
-          </div>
-          <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
-            <p className="text-yellow-400 font-bold text-sm mb-2">Microbus</p>
-            <input 
-              type="number" 
-              min="0"
-              value={vehicleCounts.minibus}
-              onChange={(e) => setVehicleCounts({...vehicleCounts, minibus: parseInt(e.target.value) || 0})}
-              className="w-12 mx-auto mb-2 px-1 py-1 rounded bg-white text-black text-center text-sm border border-gray-400 focus:outline-none focus:ring-1 focus:ring-yellow-400"
-            />
-            <p className="text-white font-bold text-lg">$54K</p>
-            {vehicleCounts.minibus > 0 && <p className="text-yellow-400 font-semibold text-xs mt-1">Total: ${(vehicleCounts.minibus * 54000).toLocaleString()}</p>}
-          </div>
-          <div className="bg-gray-800/60 border border-gray-600 p-3 rounded text-center">
-            <p className="text-yellow-400 font-bold text-sm mb-2">Bus</p>
-            <input 
-              type="number" 
-              min="0"
-              value={vehicleCounts.bus}
-              onChange={(e) => setVehicleCounts({...vehicleCounts, bus: parseInt(e.target.value) || 0})}
-              className="w-12 mx-auto mb-2 px-1 py-1 rounded bg-white text-black text-center text-sm border border-gray-400 focus:outline-none focus:ring-1 focus:ring-yellow-400"
-            />
-            <p className="text-white font-bold text-lg">$113K</p>
-            {vehicleCounts.bus > 0 && <p className="text-yellow-400 font-semibold text-xs mt-1">Total: ${(vehicleCounts.bus * 113000).toLocaleString()}</p>}
-          </div>
+          <QuantityStepper
+            label="Automóvil"
+            value={vehicleCounts.car}
+            onIncrement={() => setVehicleCounts({ ...vehicleCounts, car: vehicleCounts.car + 1 })}
+            onDecrement={() => setVehicleCounts({ ...vehicleCounts, car: Math.max(0, vehicleCounts.car - 1) })}
+            priceLabel="$21K"
+            detailLine={vehicleCounts.car > 0 ? `Total: $${(vehicleCounts.car * vehicleCosts.car).toLocaleString()}` : null}
+            activeBorderColor="border-yellow-400"
+          />
+          <QuantityStepper
+            label="Microbus"
+            value={vehicleCounts.minibus}
+            onIncrement={() => setVehicleCounts({ ...vehicleCounts, minibus: vehicleCounts.minibus + 1 })}
+            onDecrement={() => setVehicleCounts({ ...vehicleCounts, minibus: Math.max(0, vehicleCounts.minibus - 1) })}
+            priceLabel="$54K"
+            detailLine={vehicleCounts.minibus > 0 ? `Total: $${(vehicleCounts.minibus * vehicleCosts.minibus).toLocaleString()}` : null}
+            activeBorderColor="border-yellow-400"
+          />
+          <QuantityStepper
+            label="Bus"
+            value={vehicleCounts.bus}
+            onIncrement={() => setVehicleCounts({ ...vehicleCounts, bus: vehicleCounts.bus + 1 })}
+            onDecrement={() => setVehicleCounts({ ...vehicleCounts, bus: Math.max(0, vehicleCounts.bus - 1) })}
+            priceLabel="$113K"
+            detailLine={vehicleCounts.bus > 0 ? `Total: $${(vehicleCounts.bus * vehicleCosts.bus).toLocaleString()}` : null}
+            activeBorderColor="border-yellow-400"
+          />
         </div>
       </div>
       
