@@ -13,7 +13,7 @@ export default function ReserveButton({ slug = '' }) {
     return (
         <button
             onClick={handleClick}
-            className="bg-yellow-400 text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-yellow-500 transition cursor-pointer">
+            className="bg-yellow-400 text-black px-5 py-2 rounded-full text-sm font-bold transition-all duration-500 hover:scale-[1.02] shadow-[0_10px_25px_rgba(0,0,0,0.15)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.25)] hover:bg-yellow-500 cursor-pointer">
             Reservar
         </button>
     );

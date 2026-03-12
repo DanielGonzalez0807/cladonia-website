@@ -10,7 +10,7 @@ function ConfirmationContent() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center px-4 py-20">
+      <div className="min-h-screen bg-linear-to-b from-gray-900 to-gray-800 flex items-center justify-center px-4 py-20">
         <div className="max-w-2xl w-full bg-gray-800/60 border border-gray-700 rounded-2xl p-8 md:p-12 text-center">
           
           <div className="w-24 h-24 bg-green-500 rounded-full mx-auto mb-8 flex items-center justify-center">
@@ -45,19 +45,19 @@ function ConfirmationContent() {
             <h3 className="text-blue-400 font-bold text-lg mb-3">Próximos Pasos</h3>
             <ul className="space-y-3 text-gray-300 text-sm">
               <li className="flex items-start">
-                <svg className="w-5 h-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-blue-400 mr-3 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>Estaremos en contacto contigo en las próximas <strong>24 horas</strong></span>
               </li>
               <li className="flex items-start">
-                <svg className="w-5 h-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-blue-400 mr-3 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>Recibirás un correo para completar el registro de visitantes</span>
               </li>
               <li className="flex items-start">
-                <svg className="w-5 h-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-blue-400 mr-3 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>Revisa tu correo electrónico (incluyendo spam)</span>
@@ -71,12 +71,12 @@ function ConfirmationContent() {
             </p>
           </div>
 
-          <a 
+          <link 
             href="/"
             className="inline-block bg-yellow-400 text-black font-bold px-8 py-3 rounded-lg hover:bg-yellow-500 transition"
           >
             Volver al Inicio
-          </a>
+          </link>
 
           <p className="text-gray-500 text-sm mt-8">
             ALMONTE by Cladonia S.A.S

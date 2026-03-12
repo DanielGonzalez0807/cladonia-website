@@ -7,7 +7,7 @@ export default function ExperienceHero({ data, slug }) {
 
 
       <Image
-        src="https://drive.google.com/file/d/13qCEu40RgiMryyvxkO0SkvaAPty6dK3t/view?usp=drive_link"
+        src="/images/og-image.jpg"
         alt="Hero background"
         fill
         className="object-cover object-center"

@@ -4,7 +4,7 @@ import ReserveButton from "./ReserveButton";
 
 export default function Card({ title, description, image, slug = "chingaza" }) {
     return (
-        <div className="relative rounded-lg overflow-hidden w-full h-[calc(100vh-8rem)] md:h-112.5 lg:h-130 my-8 md:my-0 hover:animate-float">
+        <div className="relative rounded-lg overflow-hidden w-full h-[calc(100vh-8rem)] md:h-112.5 lg:h-130 my-8 md:my-0 transition-all duration-500 hover:scale-[1.02] shadow-[0_20px_60px_rgba(0,0,0,0.25)] hover:shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
             {/* Imagen de fondo de la tarjeta */}
             <Image 
                 src={image} 

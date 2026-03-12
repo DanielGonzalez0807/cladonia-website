@@ -507,7 +507,7 @@ export default function Form() {
         <div className="absolute inset-0 bg-black/60"></div>
         
         <div className="relative z-10 min-h-screen flex flex-col justify-center text-white py-8">
-          <h2 className="text-4xl font-bold text-white text-balance text-center mb-8">
+          <h2 className="text-4xl font-bold text-white text-balance text-center mb-8 mt-12">
             Ingresa tus datos<br />para reservar
           </h2>
           <div className="w-full max-w-5xl lg:max-w-3xl mx-auto px-4 md:px-8 lg:px-12">
